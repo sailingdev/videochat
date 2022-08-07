@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<head>
+    <% include ./header %>
+    <style>
+        body { padding-top:80px; }
+    </style>
+
+</head>
+<body>
+    <div class="row">
+        <div class="main-login col-xs-8 col-xs-offset-1 col-sm-5 col-sm-offset-3 col-md-5 col-md-offset-3 col-lg-4 col-lg-offset-4">
+
+            <div class="text-center">
+                <h1><span class="fa fa-sign-in"></span> &nbsp;&nbsp; <%= lang.registration%></h1>
+            </div>
+
+
+            <!-- show any messages that come back with authentication -->
+            <% if (message.length > 0) { %>
+            <div class="alert alert-danger"><%= message %></div>
+            <% } %>
+
+            <!-- SIGNUP FORM -->
+            <form action="/signup" method="post">
+                <div class="form-group">
+                    <label><%= lang.admin_name%></label>
+                    <input type="text" class="form-control" id="name" name="name" onblur="validate_text();">
+                    <label id="error_name" class="text-danger" style="display: none; margin-top: 10px;"></label>
+                </div>
+                <div class="form-group">
+                    <label><%= lang.email%></label>
+                    <input type="email" class="form-control" name="email">
+                </div>
+                <div class="form-group">
+                    <label><%= lang.password%></label>
+                    <input type="password" class="form-control" id="password" name="password" onblur="validate_password();">
+                    <label id="error_password" class="text-danger" style="display: none; margin-top: 10px;"></label>
+                </div>
+                <div class="form-group">
+                    <label><%= lang.confirm_password%></label>
+                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" onblur="validate_confirm();">
+                    <label id="error_confirm" class="text-danger" style="display: none; margin-top: 10px;"></label>
+                </div>
+                <button type="submit" class="btn btn-danger btn-block" style="margin-top: 30px">
+                    <%= lang.sign_up%>
+                </button>
+            </form>
+
+            <hr>
+
+            <div class="text-center">
+                <p><%= lang.already_have_account%> <a href="/login"><%= lang.login%></a></p>
+            </div>
+
+
+        </div>
+
+    </div>
+</body>
+</html>
+
+<script>
+
+    function validate_text(){
+
+        var text = $("#name").val();
+
+        if (text.length == 0){
+            $("#error_name").text("<%= lang.text_empty_error%>");
+            $("#error_name").fadeIn().delay(2000).fadeOut();
+            return false;
+        } else if (text.length > 0 && text.length < 2) {
+            $("#error_name").text("<%= lang.name_length_error%>");
+            $("#error_name").fadeIn().delay(2000).fadeOut();
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    function validate_password(){
+
+        var text = $("#password").val();
+
+        if (text.length == 0){
+            $("#error_password").text("<%= lang.text_empty_error%>");
+            $("#error_password").fadeIn().delay(2000).fadeOut();
+            return false;
+        } else if (text.length > 0 && text.length < 6) {
+            $("#error_password").text("<%= lang.password_length_error%>");
+            $("#error_password").fadeIn().delay(2000).fadeOut();
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    function validate_confirm(){
+
+        var text = $("#confirm_password").val();
+
+        if (text.length == 0){
+            $("#error_confirm").text("<%= lang.text_empty_error%>");
+            $("#error_confirm").fadeIn().delay(2000).fadeOut();
+            return false;
+        } else if (text.length > 0 && text.length < 6) {
+            $("#error_confirm").text("<%= lang.password_length_error%>");
+            $("#error_confirm").fadeIn().delay(2000).fadeOut();
+            return false;
+        } else if (text != $("#password").val()){
+            $("#error_confirm").text("<%= lang.password_match_error%>");
+            $("#error_confirm").fadeIn().delay(2000).fadeOut();
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+</script>

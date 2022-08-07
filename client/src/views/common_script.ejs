@@ -1,0 +1,21 @@
+<script src="jquery-3.2.1.min.js"></script>
+<script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="sweetalert2/sweetalert2.min.js"></script>
+<script src="toastr/toastr.min.js"></script>
+<script type="text/javascript">
+function OpenNewTab(href)
+{
+	// var win = window.open(href, '_blank');
+	// win.focus();
+    document.getElementById('linkDynamic').href = href;
+    document.getElementById('linkDynamic').click();
+}
+$(document).ready(function(){
+	$('ul.nav li.dropdown').hover(function() {
+  $(this).find('.dropdown-menu').show();
+}, function() {
+  $(this).find('.dropdown-menu').hide();
+});
+});
+
+</script>

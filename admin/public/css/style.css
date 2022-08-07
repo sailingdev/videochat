@@ -1,0 +1,306 @@
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #f2f9fe;
+  background: -moz-radial-gradient(center, ellipse cover, #f2f9fe 0%, #ffffff 100%) /* FF3.6+ */;
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #ffffff), color-stop(100%, #d6f0fd)) /* Chrome,Safari4+ */;
+  background: -webkit-radial-gradient(center, ellipse cover, #f2f9fe 0%, #ffffff 100%) /* Chrome10+,Safari5.1+ */;
+  background: -o-radial-gradient(center, ellipse cover, #f2f9fe 0%, #ffffff 100%) /* Opera 12+ */;
+  background: -ms-radial-gradient(center, ellipse cover, #f2f9fe 0%, #ffffff 100%) /* IE10+ */;
+  background: radial-gradient(center, ellipse cover, #f2f9fe 0%, #ffffff 100%) /* W3C */;
+}
+h2 {
+  margin: 0 0 6px 0;
+  font-weight: bold;
+}
+h6 {
+  margin: 2px 0 20px 0;
+}
+hr {
+  margin: 14px 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #fff;
+}
+ul {
+  margin: 4px 0 0 0;
+}
+label,
+h6 {
+  color: #808080;
+  font-size: 13px;
+  font-weight: normal;
+  text-shadow: -1px 1px 0 #fff;
+}
+.well {
+  background: #f8f8f8;
+  margin-bottom: 0;
+}
+.well .tab-title {
+  float: left;
+  margin-left: 10px;
+}
+.well .button-top-right {
+  float: right;
+  margin: 0 10px 20px 0;
+}
+.navbar-btn {
+  min-width: 100px;
+  margin-right: 8px;
+}
+.navbar-btn .btn {
+  min-width: 100px;
+}
+.glyphicon {
+  margin-right: 8px;
+}
+/*
+	login window
+*/
+#login label {
+  margin-left: 2px;
+}
+#login form {
+  width: 320px;
+}
+#login .controls {
+  margin-top: 20px;
+}
+#login .controls .button-rememember-me {
+  float: left;
+  width: 150px;
+}
+#login .controls .button-sign-in {
+  float: right;
+  width: 120px;
+}
+#login .btm-links {
+  font-size: 0.9em;
+  margin: 2px 0 0 0;
+}
+#login .btm-links #forgot-password {
+  float: left;
+  margin-left: 10px;
+}
+#login .btm-links #create-account {
+  float: right;
+  margin-right: 5px;
+}
+#account-form-container form {
+  width: 460px;
+}
+/*
+	modal windows
+*/
+.modal .modal-dialog {
+  width: 480px;
+}
+.modal .form-group {
+  margin-bottom: 0px;
+}
+.modal .alert {
+  margin-top: 10px;
+  margin-bottom: 0;
+  padding: 8px 15px 8px 15px;
+}
+.modal .alert-dismissable,
+.modal .close {
+  right: -4px;
+}
+.modal p {
+  margin: 0;
+  padding: 0;
+}
+.modal .modal-footer button {
+  width: 80px;
+}
+.center-vertical {
+  height: 100vh;
+}
+.center-vertical form {
+  top: 50%;
+  margin: auto;
+  position: relative;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.form-horizontal .form-buttons {
+  float: right;
+}
+.form-horizontal .form-buttons .btn {
+  width: 80px;
+  margin-left: 6px;
+}
+.form-horizontal input,
+.form-horizontal select {
+  height: 30px;
+}
+
+/*//////////////////////////////////spinner class*/
+
+/* ---------------------------------------------------------------------- */
+
+/*  Spinner
+/* ---------------------------------------------------------------------- */
+
+
+.csspinner
+{
+  position: fixed;
+}
+
+.csspinner:before
+{
+  content: "";
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.csspinner:after
+{
+  z-index: 2;
+  content: "";
+  position: absolute;
+  -webkit-transform-origin: center;
+  -ms-transform-origin: center;
+  transform-origin: center;
+}
+
+.load1:after
+{
+  width: 30px;
+  height: 30px;
+  top: 50%;
+  left: 50%;
+  margin: -15px 0 0 -15px;
+  border-radius: 50%;
+  border-top: 2px solid rgba(0, 0, 0, 0.2);
+  border-right: 2px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+  border-left: 2px solid #58748B;
+  -webkit-animation: load1 1.1s infinite linear;
+  animation: load1 1.1s infinite linear;
+}
+
+@-webkit-keyframes load1{
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes load1{
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.load2:after
+{
+  width: 30px;
+  height: 30px;
+  background-color: #58748B;
+  top: 50%;
+  left: 50%;
+  margin: -15px 0 0 -15px;
+  -webkit-animation: load2 1.2s infinite ease-in-out;
+  animation: load2 1.2s infinite ease-in-out;
+}
+
+@-webkit-keyframes load2{
+  0% {
+    -webkit-transform: perspective(120px);
+  }
+  50% {
+    -webkit-transform: perspective(120px) rotateY(180deg);
+  }
+  100% {
+    -webkit-transform: perspective(120px) rotateY(180deg) rotateX(180deg);
+  }
+}
+
+@keyframes load2{
+  0% {
+    transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+  }
+  50% {
+    transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+  }
+  100% {
+    transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+  }
+}
+
+.panel-fullscreen
+{
+  width: 100%;
+  height: 100%;
+}
+
+.panel-fullscreen .panel-heading
+{
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.panel-fullscreen .panel-tools
+{
+  top: 30px;
+}
+
+.panel-fullscreen .panel-tools .expand-on
+{
+  display: block;
+}
+
+.panel-fullscreen .panel-tools .expand-off
+{
+  display: none;
+}
+
+.panel-carousel .slide
+{
+  background-size: cover !important;
+}
+
+.panel-carousel .slick-dots
+{
+  bottom: 0;
+}
+
+/*cover start*/
+/*cover end*/
+.divCover {
+  width: 100%;
+  height: 100%;
+  background: white;
+  opacity: 0.7;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  z-index: 99999;
+  display: none;
+}
+.divCover.csspinner{
+  display: inherit;
+}
+
+/*//////////////////////////////////spinner class  end*/

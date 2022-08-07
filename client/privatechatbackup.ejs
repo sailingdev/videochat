@@ -1,0 +1,78 @@
+//privatechatpage backup
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>qqqqq</title>
+    <% include ./common_meta_styles.ejs %>
+        <style type="text/css">
+        video {
+            width: 400px;
+            height: 300px;
+        }
+        </style>
+</head>
+
+<body>
+    <button id="setup-new-meeting">Setup New Meeting</button>
+    <button id="join-meeting">Join Meeting</button>
+    <br>
+    <script src="socket.io-1.2.0.js"></script>
+    <script src="meeting.js"></script>
+    <!-- <script src="firebase.js"></script> -->
+    <script type="text/javascript">
+    var meetingUniqueId = "meetingId";
+    var meetingRoomName = "roomId";
+
+    var meeting = new Meeting(meetingUniqueId);
+
+    // on getting local or remote streams
+    meeting.onaddstream = function(e) {
+
+        // e.type == 'local' ---- it is local media stream
+        // e.type == 'remote' --- it is remote media stream
+
+        var comment = document.createElement('h1');
+        comment.innerHTML = e.type;
+        document.body.appendChild(comment);
+
+        document.body.appendChild(e.video);
+    };
+
+
+    meeting.openSignalingChannel = function(callback) {
+        console.log("openSignalingChannel");
+
+        return io.connect().on('message', callback);
+    };
+
+    meeting.onmeeting = function(room) {
+
+        console.log("onmeeting");
+        console.log(room);
+        var li = document.createElement('li');
+        li.setAttribute('user-id', room.userid);
+        li.setAttribute('room-id', room.roomid);
+
+        li.innerText = "lllool";
+        li.onclick = function() {
+            var room = {
+                userid: this.getAttribute('user-id'),
+                roomid: this.getAttribute('room-id')
+            };
+            meeting.meet(room);
+        };
+        document.body.appendChild(li);
+    };
+
+    document.getElementById('setup-new-meeting').onclick = function() {
+        meeting.setup(meetingRoomName);
+    };
+
+    document.getElementById('join-meeting').onclick = function() {
+        meeting.check(meetingRoomName);
+    };
+    </script>
+</body>
+
+</html>

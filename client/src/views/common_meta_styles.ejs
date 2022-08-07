@@ -1,0 +1,717 @@
+<meta charset="utf-8">
+<!--[if lt IE 9]> 
+<script> document.createElement("strike"); </script>
+<![endif]-->
+<link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="toastr/toastr.min.css">
+<link rel="stylesheet" href="sweetalert2/sweetalert2.min.css">
+<style type="text/css">
+strike {
+	text-decoration: line-through;
+	color: red;
+}
+
+body {
+	background-color: rgba(<%=theme.c2_r%>, <%=theme.c2_g%>, <%=theme.c2_b%>, <%=theme.c2_a%>);
+}
+#id_liCreateRoom  span{
+	color: rgba(<%=theme.c3_r%>, <%=theme.c3_g%>, <%=theme.c3_b%>, <%=theme.c3_a%>)	;
+}
+#id_liActivateRoom  span{
+	color: rgba(<%=theme.c4_r%>, <%=theme.c4_g%>, <%=theme.c4_b%>, <%=theme.c4_a%>)	;
+}
+#id_liAllRoom  span{
+	color: rgba(<%=theme.c5_r%>, <%=theme.c5_g%>, <%=theme.c5_b%>, <%=theme.c5_a%>)	;
+}
+#id_liTotalUserOnline  span{
+	color: rgba(<%=theme.c6_r%>, <%=theme.c6_g%>, <%=theme.c6_b%>, <%=theme.c6_a%>)	;
+}
+#id_liLogInOut  span{
+	color: rgba(<%=theme.c72_r%>, <%=theme.c72_g%>, <%=theme.c72_b%>, <%=theme.c72_a%>)	;
+}
+
+
+@font-face {
+	font-family: 'meiryo';
+	/*a name to be used later*/
+	src: url("MyriadPro-Regular.otf");
+	/*URL to font*/
+}
+
+* {
+	font-family: meiryo, Sans-serif;
+	/*font-size: 24px;*/
+}
+
+
+.fontBig {
+	font-size: <%=theme.font_big%>px;
+}
+
+.fontNormal {
+	font-size: <%=theme.font_normal%>px;
+}
+
+.fontSmall {
+	font-size: <%=theme.font_small%>px;
+}
+
+
+
+.bgMainColor {
+	background-color: rgba(<%=theme.c_main_r%>, <%=theme.c_main_g%>, <%=theme.c_main_b%>, <%=theme.c_main_a%>);
+}
+
+.colorMain {
+	color: rgba(<%=theme.c_main_r%>, <%=theme.c_main_g%>, <%=theme.c_main_b%>, <%=theme.c_main_a%>);
+}
+
+.bgAccentColor {
+	background-color: rgba(<%=theme.c_accent_r%>, <%=theme.c_accent_g%>, <%=theme.c_accent_b%>, <%=theme.c_accent_a%>);
+}
+
+.colorAccent {
+	color: rgba(<%=theme.c_accent_r%>, <%=theme.c_accent_g%>, <%=theme.c_accent_b%>, <%=theme.c_accent_a%>);
+}
+
+.bgAlternativeColor {
+	background-color: rgba(<%=theme.c_alt_r%>, <%=theme.c_alt_g%>, <%=theme.c_alt_b%>, <%=theme.c_alt_a%>);
+}
+.colorAlternative {
+	color: rgba(<%=theme.c_alt_r%>, <%=theme.c_alt_g%>, <%=theme.c_alt_b%>, <%=theme.c_alt_a%>);
+}
+
+
+.divOpacityEffect {
+	opacity: 0.8;
+	transition: opacity 0.1s linear;
+}
+
+.divOpacityEffect:hover {
+	opacity: 1;
+}
+
+.divZebera {
+	background-image: linear-gradient( 45deg,
+	rgba(222, 222, 222, 1) 25%,
+	rgba(255, 255, 255, 0) 25%,
+	rgba(255, 255, 255, 0) 50%,
+	rgba(222, 222, 222, 1) 50%,
+	rgba(222, 222, 222, 1) 75%,
+	rgba(255, 255, 255, 0) 75%);
+	background-size: 10px 10px;
+	background-color: rgba(100, 100, 255, .2);
+}
+
+.labelNormal {
+	font-weight: normal;
+}
+
+
+
+
+
+/*//////////////////////////////////spinner class*/
+
+
+/* ---------------------------------------------------------------------- */
+
+
+/*  Spinner
+        /* ---------------------------------------------------------------------- */
+
+.csspinner {
+	position: fixed;
+}
+
+.csspinner:before {
+	content: "";
+	z-index: 1;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(255, 255, 255, 0.8);
+}
+
+.csspinner:after {
+	z-index: 2;
+	content: "";
+	position: absolute;
+	-webkit-transform-origin: center;
+	-ms-transform-origin: center;
+	transform-origin: center;
+}
+
+.load1:after {
+	width: 30px;
+	height: 30px;
+	top: 50%;
+	left: 50%;
+	margin: -15px 0 0 -15px;
+	border-radius: 50%;
+	border-top: 2px solid rgba(0, 0, 0, 0.2);
+	border-right: 2px solid rgba(0, 0, 0, 0.2);
+	border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+	border-left: 2px solid #58748B;
+	-webkit-animation: load1 1.1s infinite linear;
+	animation: load1 1.1s infinite linear;
+}
+
+@-webkit-keyframes load1 {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes load1 {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+
+.load2:after {
+	width: 30px;
+	height: 30px;
+	background-color: #58748B;
+	top: 50%;
+	left: 50%;
+	margin: -15px 0 0 -15px;
+	-webkit-animation: load2 1.2s infinite ease-in-out;
+	animation: load2 1.2s infinite ease-in-out;
+}
+
+@-webkit-keyframes load2 {
+	0% {
+		-webkit-transform: perspective(120px);
+	}
+	50% {
+		-webkit-transform: perspective(120px) rotateY(180deg);
+	}
+	100% {
+		-webkit-transform: perspective(120px) rotateY(180deg) rotateX(180deg);
+	}
+}
+
+@keyframes load2 {
+	0% {
+		transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+		-webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+	}
+	50% {
+		transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+		-webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+	}
+	100% {
+		transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+		-webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+	}
+}
+
+.panel-fullscreen {
+	width: 100%;
+	height: 100%;
+}
+
+.panel-fullscreen .panel-heading {
+	padding-top: 30px;
+	padding-bottom: 30px;
+}
+
+.panel-fullscreen .panel-tools {
+	top: 30px;
+}
+
+.panel-fullscreen .panel-tools .expand-on {
+	display: block;
+}
+
+.panel-fullscreen .panel-tools .expand-off {
+	display: none;
+}
+
+.panel-carousel .slide {
+	background-size: cover !important;
+}
+
+.panel-carousel .slick-dots {
+	bottom: 0;
+}
+
+
+
+/*cover start*/
+
+
+/*cover end*/
+
+.divCover {
+	width: 100%;
+	height: 100%;
+	background: white;
+	opacity: 0.7;
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	z-index: 99999;
+	display: none;
+}
+
+.divCover.csspinner {
+	display: inherit;
+}
+
+
+
+/*//////////////////////////////////spinner class  end*/
+
+
+/***********************navbar start**********/
+
+.navbar {
+	background-position-x: 50%;
+	background-position-y: 50%;
+	background-repeat: no-repeat;
+	background-size: cover;
+	/*background-image: url("/navbar_logo.png");*/
+	background-color: rgba(<%=theme.c1_r%>, <%=theme.c1_g%>, <%=theme.c1_b%>, <%=theme.c1_a%>);
+	border-radius: 0px;
+}
+
+.icon-bar {
+	background-color: rgba(0, 0, 0, .8);
+}
+
+.navbar a {
+	color: black;
+	background-color: transparent!important;
+}
+
+.navbar-brand {
+	padding: 0px;
+}
+
+.navbar-brand>img {
+	height: 100%;
+	/* firefox bug fix */
+	width: auto;
+}
+
+
+/***********************navbar   end**********/
+
+.divMainContainer {
+	width: 100%;
+	/*max-width: 1000px;*/
+	margin: 0 auto;
+	height: calc(100% - 75px);
+	padding: 10px;
+	padding-top: 0px;
+}
+
+.divOneChatRoom {
+	width: calc( 50% - 10px * 2);
+	min-height: calc( 500px - 10px * 2);
+
+	margin: 10px;
+	position: relative;
+	display: inline;
+	float: left;
+
+	background-position-x: 50%;
+	background-position-y: 50%;
+	background-repeat: no-repeat;
+	background-size: cover;
+
+	cursor: pointer;
+}
+
+.divJoinRoomButton {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}
+
+.divJoinRoomButton span {
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+.divMicInfo {
+	width: 100%;
+	height: 75%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+.divRoomInfo {
+	width: 100%;
+	height: 25%;
+
+	padding: 10px;
+
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+}
+
+.divRoomNameAndOnlineUserCount {
+	/*height: 50%;*/
+}
+
+.divRoomName {
+	display: inline;
+	float: left;
+}
+
+.divRoomName span {
+	text-transform: uppercase;
+}
+
+.divOnlineUserCount {
+	display: block;
+	float: right;
+}
+
+.divRoomDescription {
+	/*height: 50%;*/
+	word-wrap: break-word;
+	color: rgba(<%=theme.c8_r%>, <%=theme.c8_g%>, <%=theme.c8_b%>, <%=theme.c8_a%>)	!important;
+	background-color: rgba(<%=theme.c9_r%>, <%=theme.c9_g%>, <%=theme.c9_b%>, <%=theme.c9_a%>)	!important;
+}
+
+.divMicUserAvatar {
+	width: 100px;
+	height: 100px;
+	margin: 0 auto;
+}
+
+.divMicUserAvatar img {
+	width: 100%;
+	height: 100%;
+}
+
+.divMicUserName {
+	width: 100%;
+	margin-top: 10px;
+	padding: 5px;
+	text-align: center;
+}
+
+.divMicUserName span {
+	text-transform: uppercase;
+}
+
+.divMicUserInfo {
+	position: absolute;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	left: 50%;
+}
+
+.divButtonClickHereToRegister {
+	text-transform: uppercase;
+	/*margin: 0 auto;*/
+}
+
+.divLogin {
+	background-color: #dfdfdf;
+	text-transform: uppercase;
+	width: 30%;
+	/*margin: 0 auto;*/
+}
+
+.divRegisterButton {
+	background-color: #dfdfdf;
+	text-transform: uppercase;
+	width: 30%;
+}
+
+.divJoinRoomWithPassword {
+	background-color: #dfdfdf;
+	text-transform: uppercase;
+	width: 30%;
+}
+
+.divSendForgottenPassword {
+	background-color: #dfdfdf;
+	text-transform: uppercase;
+}
+
+.divSpace {
+	height: 10px;
+}
+
+
+
+.checkboxGroup div {
+	float: left;
+}
+
+#userAvatar {
+	width: 100px;
+	height: 100px;
+	float: left;
+}
+
+#lblInputAvatarImg {
+	float: left;
+}
+</style>
+<style type="text/css">
+@media (max-width: 768px) {
+	.divOneChatRoom {
+		width: 100%;
+		margin: 0px;
+		margin-bottom: 10px;
+	}
+	.checkboxGroup div {
+		float: none;
+		display: block;
+		text-align: left;
+	}
+}
+</style>
+<style type="text/css">
+.divRoomInfoAndChatList {
+	width: 69%;
+	margin-right: 1%;
+	height: 100%;
+	float: left;
+	display: inline;
+}
+
+.divRoomDescription {
+	width: 100%;
+	height: 60px;
+	padding: 10px;
+	margin-bottom: 20px;
+}
+
+.divVideoChatting {
+	width: 100%;
+	height: 200px;
+	margin-bottom: 20px;
+	
+	overflow-x: scroll;
+	overflow-y: hidden;
+	white-space: nowrap;
+
+	background-color: rgba(<%=theme.c10_r%>, <%=theme.c10_g%>, <%=theme.c10_b%>, <%=theme.c10_a%>);
+	position: relative;
+	
+}
+
+.divLocalVideo {
+	/*width: 200px;*/
+	height: 180px;
+	display: inline-block;
+	float: none;
+}
+.divRemoteVideo div, .divLocalVideo div {
+	margin-left: 10px;
+	margin-right: 10px;
+	display: inline;
+	float: left;
+}
+
+.divRemoteVideo {
+	width: auto;
+	height: 180px;
+	display: inline-block;
+	float: none;
+}
+
+video {
+	width: 200px;
+	/*height: 200px;*/
+	margin-right: 10px;
+	display: inline;
+	float: left;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.divChatList {
+	width: 100%;
+	height: calc(100% - 410px);
+	margin-bottom: 20px;
+}
+
+.ulChatList {
+	width: 100%;
+	height: 100%;
+	padding: 0px;
+	margin: 0px;
+	list-style: none;
+	overflow-y: scroll;
+	/*overflow: hidden;*/
+	background-color: rgba(<%=theme.c11_r%>, <%=theme.c11_g%>, <%=theme.c11_b%>, <%=theme.c11_a%>);
+
+}
+
+
+/*.ulChatList li { background: green; }
+		.ulChatList li:nth-child(odd) { background: lightgreen; }*/
+
+.divChatItem {
+	width: 100%;
+	min-height: 100px;
+	padding: 10px;
+}
+
+.divSenderAvater {
+	width: 50px;
+	height: 50px;
+	display: inline;
+	float: left;
+}
+
+.divSenderAvater img {
+	width: 100%;
+	height: 100%;
+}
+
+.divChatText {
+	width: calc(100% - 50px);
+	display: inline;
+	float: left;
+	padding-left: 10px;
+	word-break: break-word;
+}
+
+.divChatTime {
+	width: 100%;
+	text-align: right;
+}
+
+.divUserList {
+	width: 30%;
+	height: 100%;
+	float: left;
+	display: inline;
+	background-color: rgba(<%=theme.c12_r%>, <%=theme.c12_g%>, <%=theme.c12_b%>, <%=theme.c12_a%>);
+}
+
+.ulUserList {
+	list-style: none;
+	margin: 0px;
+	padding: 10px;
+}
+
+.ulUserList li {
+	margin-bottom: 10px;
+	display: block;
+}
+
+.divOneRoomUserItem {
+	width: 100%;
+}
+
+.divRoomUsernameAndAvatar {
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+}
+.divRoomUserName {
+	display: block;
+}
+.divRoomUserName span {
+	display: inline;
+	float: left;
+}
+.divPrivateChatLink {
+	display: block;
+}
+.divRoomUserAvatar {
+	width: 50px;
+	height: 50px;
+	display: inline;
+	float: left;
+}
+#anchorProfile {
+	float: right;
+}
+.divRoomUserAvatar img {
+	width: 50px;
+	height: 50px;
+}
+
+.divRoomUserInformation {
+	width: calc(100% - 60px);
+	margin-left: 10px;
+	display: inline;
+	float: left;
+}
+
+.divUserChatControls {
+	/*text-align: right;*/
+}
+
+.divUserChatStatus {
+	display: inline;
+	float: right;
+}
+
+.divMsgEdit {
+	height: 90px;
+}
+
+.imgText {
+	width: 30px;
+	height: 30px;
+}
+
+.imgVoice {
+	width: 30px;
+	height: 30px;
+}
+
+.imgVideo {
+	width: 30px;
+	height: 30px;
+}
+#btnSend {
+	width: 10%;
+	height: 100%;
+	display: inline;
+	float: left;
+	background-color: rgba(<%=theme.c13_r%>, <%=theme.c13_g%>, <%=theme.c13_b%>, <%=theme.c13_a%>);
+
+}
+
+#btnToggleMic {
+	width: 10%;
+	height: 100%;
+	display: inline;
+	float: left;
+	background-color: rgba(<%=theme.c14_r%>, <%=theme.c14_g%>, <%=theme.c14_b%>, <%=theme.c14_a%>);
+}
+
+#btnToggleCam {
+	width: 10%;
+	height: 100%;
+	display: inline;
+	float: left;
+	background-color: rgba(<%=theme.c15_r%>, <%=theme.c15_g%>, <%=theme.c15_b%>, <%=theme.c15_a%>);
+}
+
+/**navbar style***/
+
+
+
+</style>

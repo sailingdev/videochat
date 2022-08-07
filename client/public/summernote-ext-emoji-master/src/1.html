@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
+  <title>summernote</title>
+  <!-- include jquery -->
+  
+
+  <!-- include libraries BS3 -->
+
+  <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script> 
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script> 
+  
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="http://cdn.jsdelivr.net/emojione/1.5.0/assets/css/emojione.min.css" />
+  <script src="http://cdn.jsdelivr.net/emojione/1.5.0/lib/js/emojione.min.js"></script>
+
+  <!-- include summernote -->
+  
+  <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css" rel="stylesheet">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
+<script src="summernote-ext-emojione.js"></script>
+
+  
+
+  <script src="https://www.google.com/jsapi" type="text/javascript"></script>
+
+  <script type="text/javascript">
+    emojione.ascii = true;
+    $(document).ready(function() {
+      $('.summernote').summernote({
+        height: 80,
+        tabsize: 2,
+        toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+  		    ['insert', ['emojiOneChar', 'specialChar']]
+  		  ]
+      });
+      $('div.note-emojionechar-dialog').attr('tabindex', '-1'); /* allow ESC to close modal */
+      $('.note-emojionechar-node button img').each(function(){
+        $(this).attr('src', 'http:' + $(this).attr('src')); // only needed when file is loaded in browser as file://
+      });
+      
+    });
+  </script>
+</head>
+<body>
+  <textarea class="summernote"><p>Seasons <b>coming up</b></p></textarea>
+</body>
+</html>

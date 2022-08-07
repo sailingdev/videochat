@@ -1,0 +1,16 @@
+{
+  "name": "express-tutorial",
+  "version": "1.0.0",
+  "dependencies": {
+    "body-parser": "~1.14.2",
+    "ejs": "^2.4.2",
+    "express": "~4.13.1",
+    "express-session": "~1.13.0",
+    "formidable": "^1.1.1",
+    "mysql": "^2.14.1",
+    "node-datetime": "^2.0.3",
+    "path": "^0.12.7",
+    "serve-favicon": "^2.4.4",
+    "util": "^0.10.3"
+  }
+}

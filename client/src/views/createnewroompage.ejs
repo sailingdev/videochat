@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>
+		<%= lang.create_new_room_page_title %>
+	</title>
+	<% include ./common_meta_styles.ejs %>
+		<style type="text/css">
+		* {
+			/*border-radius: 0 !important;*/
+			cursor: default;
+		}
+
+		button,
+		.btn,
+		.modal-body,
+		.modal-content {
+			border-radius: 0 !important;
+		}
+
+		.modal-content {
+			border: 0px;
+		}
+
+		.modal-header {
+			text-transform: uppercase;
+			text-align: center;
+		}
+
+		input[type=checkbox] {
+			transform: scale(1.5);
+		}
+		/***********/
+
+		.divMainContainer {
+			width: 100%;
+			max-width: 1000px;
+			margin: 0 auto;
+			height: 100%;
+			padding: 10px;
+			padding-top: 0px;
+		}
+
+		#roomdetails {
+			height: 100px;
+		}
+
+		#imgRoomImage {
+			width: 100%;
+			height: 100%;
+			float: left;
+		}
+		</style>
+		<style type="text/css">
+		@media (max-width: 768px) {}
+		</style>
+</head>
+
+<body >
+	<% include ./navbar.ejs %>
+		<div class="divMainContainer clearfix">
+			<form class="form-horizontal" method="post" action="/createnewroomrequest" target="respTmp" id="formCreateNewRoom" enctype="multipart/form-data" >
+				<div class="form-group">
+					<label for="roomname" class="col-sm-3 control-label labelNormal"><%= lang.cnrpage_room_name %></label>
+					<div class="col-sm-5">
+						<input type="text" class="form-control" id="roomname" name="roomname">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="roomdetails" class="col-sm-3 control-label labelNormal"><%= lang.cnrpage_room_details %></label>
+					<div class="col-sm-5">
+						<textarea class="form-control" form="formCreateNewRoom" id="roomdetails" name="roomdetails"></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="roomcapacity" class="col-sm-3 control-label labelNormal"><%= lang.cnrpage_room_capacity %></label>
+					<div class="col-sm-5">
+						<input type="number" class="form-control" id="roomcapacity" name="roomcapacity">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label labelNormal" for="inputRoomImage"><%= lang.cnrpage_upload_picture %></label>
+					<div class="col-sm-5">
+						<input style="display: none;" type="file" id="inputRoomImage" name="roomimage">
+						<label id="lblRoomImage" for="inputRoomImage">
+							<img id="imgRoomImage" src="/anonymous.png">
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label labelNormal"><%= lang.cnrpage_room_options %></label>
+					<div class="col-sm-5">
+						<div class="checkbox">
+							<label class="labelNormal colorAccent fontSmall">
+								<input type="checkbox" name="canmic"><%= lang.cnrpage_users_cannot_use_mic %></label>
+						</div>
+						<div class="checkbox">
+							<label class="labelNormal colorAccent fontSmall">
+								<input type="checkbox" name="canvideo"><%= lang.cnrpage_users_cannot_use_cam %></label>
+						</div>
+						<div class="checkbox">
+							<label class="labelNormal colorAccent fontSmall">
+								<input type="checkbox" name="cantext"><%= lang.cnrpage_users_cannot_text %></label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="roompassword" class="col-sm-3 control-label labelNormal"><%= lang.cnrpage_room_password %></label>
+					<div class="col-sm-5">
+						<input type="password" class="form-control" id="roompassword" name="roompassword">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="labelNormal"><%= lang.cnrpage_room_note %></label>
+				</div>
+				<div class="row" style="text-align: center;">
+					<button type="submit" class="btn colorAccent divCreateRoomButton fontNormal"><%= lang.cnrpage_create_room %></button>
+				</div>
+			</form>
+		</div>
+		<iframe id="respTmp" name="respTmp" style="display: none;">
+		</iframe>
+		<!-- below is script -->
+		<% include ./common_script.ejs %>
+			<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				// avater image event handler on register modal
+				$("#inputRoomImage").change(function() {
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						$("#imgRoomImage").attr("src", e.target.result);
+					}
+					reader.readAsDataURL($(this)[0].files[0]);
+					// console.log($(this)[0].files[0]);
+				});
+
+
+				// after form post.
+				$("#respTmp").on("load", function() {
+					//$(".divCover").removeClass('csspinner load1');
+					var ret = $(this).contents().find("body").text();
+
+					ret = JSON.parse(ret);
+
+					// console.log(ret);
+
+					if (ret.status == "fail") {
+						if (ret.type == "needtologin") {
+							toastr.error(ret.msg, "<%= lang.frontpage_error %>");
+							return;
+						}
+
+						toastr.error(ret.msg, "<%= lang.cnrpage_error %>");
+						return;
+					}
+
+					if (ret.status == "ok") {
+						if (ret.type == "createroom") {
+							if(ret.type == "showcreateroom"){
+								window.location.href = ret.data;
+								return;
+							}
+							toastr.success(ret.msg, "<%= lang.cnrpage_success %>");
+							url = ret.data;
+							window.location.href = url;
+						}
+					}
+
+				});
+
+			});
+			</script>
+</body>
+
+</html>

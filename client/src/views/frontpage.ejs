@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>
+		<%= lang.front_page_title %>
+	</title>
+	<% include ./common_meta_styles.ejs %>
+		<style type="text/css">
+		* {
+			/*border-radius: 0 !important;*/
+			cursor: default;
+		}
+
+		button,
+		.btn,
+		.modal-body,
+		.modal-content {
+			border-radius: 0 !important;
+		}
+
+
+		.modal-content {
+			border: 0px;
+		}
+
+		.modal-header {
+			text-transform: uppercase;
+			text-align: center;
+		}
+
+
+		input[type=checkbox] {
+			transform: scale(1.5);
+		}
+		/***********/
+		</style>
+</head>
+
+<!-- <body class="divZebera"> -->
+<body class="">
+	<% include ./navbar.ejs %>
+	<div class="divMainContainer clearfix" id="id_divChatrooms">
+		<% if (roomData.length == 0) {-%>
+			<h3>Currently there is no active rooms. plz refer All rooms on the navbar.</h3>
+		<% }%>
+		<% for (var i = 0; i < roomData.length; i++) { -%>
+			<div class="divOneChatRoom clearfix" style="background-image: url('<%= roomData[i].image %>');" roomId="<%= roomData[i].id %>" isProtected="<%= roomData[i].is_password_protected == "YES" ? "true" : "false" %>">
+				<div class="divMicInfo">
+					<div class="divMicUserInfo divOpacityEffect clearfix">
+						<% if( roomData[i].lastmanAvatar != undefined ) {-%>
+							<div class="divMicUserAvatar ">
+								<img src="<%= roomData[i].lastmanAvatar %>">
+							</div>
+							<div class="divMicUserName bgAccentColor">
+								<span class="colorMain fontNormal"><%= roomData[i].lastmanUsername %> <%= lang.frontpage_is_on_mic %> </span>
+							</div>
+						<%}%>
+						
+					</div>
+				</div>
+				<div class="divRoomInfo bgAccentColor colorMain divOpacityEffect fontNormal clearfix">
+					<div class="divRoomNameAndOnlineUserCount clearfix">
+						<div class="divRoomName">
+							<span><%= lang.frontpage_room_ %><%= roomData[i].room_name %></span>
+						</div>
+						<div class="divOnlineUserCount">
+							<span><%= lang.frontpage_online %> (<%=roomData[i].online_user_count%>/<%=roomData[i].capacity%>)</span>
+						</div>
+					</div>
+					<div class="divRoomDescription">
+						<span class="fontSmall"><%= roomData[i].detail %></span>
+					</div>
+				</div>
+				<div class="btn divJoinRoomButton bgAccentColor divOpacityEffect" roomId="<%= roomData[i].id %>" isProtected="<%= roomData[i].is_password_protected == "YES" ? "true" : "false" %>">
+					<span class="colorMain fontNormal"><%= lang.frontpage_corner_joinroom_button %></span>
+				</div>
+			</div>
+			<% } -%>
+	</div>
+	<% if( typeof loadMoreButton !== 'undefined') { -%>
+	
+	<div style="text-align: center;margin-bottom: 20px">
+		<button class="btn primary" id="btnLoadMoreRoom">load more rooms</button>
+	</div>
+
+	<% } %>
+
+	<div class="modal fade" id="modalLogin">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header bgAccentColor colorMain">
+					<label class="modal-title fontNormal labelNormal"><%= lang.frontpage_login_or_register %></h5>
+					</label>
+				</div>
+				<div class="modal-body text-center">
+					<div class="row">
+						<button id="btnRegister" class="btn divButtonClickHereToRegister bgAlternativeColor colorAccent fontNormal "><%= lang.frontpage_click_here_to_register %></button>
+					</div>
+					<div class="row divSpace"></div>
+					<form class="form-horizontal" method="post" action="/login" target="respTmp">
+						<div class="form-group">
+							<label for="username" class="col-sm-offset-1 col-sm-3 control-label labelNormal colorAccent"><%= lang.frontpage_username %></label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" id="username" name="username">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="password" class="col-sm-offset-1 col-sm-3 control-label labelNormal colorAccent"><%= lang.frontpage_password %></label>
+							<div class="col-sm-7">
+								<input type="password" class="form-control" id="password" name="password">
+							</div>
+						</div>
+						<div class="form-group row checkboxGroup">
+							<div class="checkbox col-sm-3">
+								<label class="labelNormal colorAccent fontSmall">
+									<input type="checkbox" name="isguest"><%= lang.frontpage_guest_login %></label>
+							</div>
+							<div class="checkbox col-sm-4">
+								<label class="labelNormal colorAccent fontSmall">
+									<input type="checkbox" name="isremember"><%= lang.frontpage_remember_me %></label>
+							</div>
+							<div class="checkbox col-sm-5">
+								<label class="labelNormal colorAccent fontSmall">
+									<input type="checkbox" name="isautologin"><%= lang.frontpage_auto_login_next_visit %></label>
+							</div>
+						</div>
+						<div class="row">
+							<button type="submit" class="btn colorAccent divLogin fontNormal"><%= lang.frontpage_login %></button>
+						</div>
+					</form>
+					<div class="divSpace"></div>
+					<div class="divSpace"></div>
+					<div class="row">
+						<a id = "anchorForgotPassword" class="colorAccent" href="#"><%= lang.frontpage_forgot_password %></a>
+					</div>
+					<div class="divSpace"></div>
+					<div class="row">
+						<a class="colorAccent fontSmall" href="#"><%= lang.frontpage_terms_and_conditions %></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="modalRegister">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header bgAccentColor colorMain">
+					<label class="modal-title fontNormal labelNormal"><%= lang.frontpage_login_or_register %></h5>
+					</label>
+				</div>
+				<div class="modal-body text-center">
+					<form class="form-horizontal" method="post" action="/register" enctype="multipart/form-data" target="respTmp">
+						<div class="form-group">
+							<label for="username" class="col-sm-offset-1 col-sm-3 control-label labelNormal colorAccent"><%= lang.frontpage_username %></label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" id="username" name="username">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="password" class="col-sm-offset-1 col-sm-3 control-label labelNormal colorAccent"><%= lang.frontpage_password %></label>
+							<div class="col-sm-7">
+								<input type="password" class="form-control" id="password" name="password">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="email" class="col-sm-offset-1 col-sm-3 control-label labelNormal colorAccent"><%= lang.frontpage_email %></label>
+							<div class="col-sm-7">
+								<input type="email" class="form-control" id="email" name="email">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-offset-1 col-sm-3 control-label labelNormal colorAccent" for="inputAvatarImg"><%= lang.frontpage_upload_picture %></label>
+							<div class="col-sm-7">
+								<input style="display: none;" type="file" id="inputAvatarImg" name="useravatarimage">
+								<label id="lblInputAvatarImg" for="inputAvatarImg">
+									<img id="userAvatar" src="/anonymous.png">
+								</label>
+							</div>
+						</div>
+						<div class="row">
+							<button type="submit" class="btn colorAccent divRegisterButton fontNormal"><%= lang.frontpage_register %></button>
+						</div>
+					</form>
+					<div class="divSpace"></div>
+					<div class="divSpace"></div>
+					<div class="row">
+						<a class="colorAccent fontSmall" href="#"><%= lang.frontpage_terms_and_conditions %></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="modalRoomPassword">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header bgAccentColor colorMain">
+					<label class="modal-title fontNormal labelNormal"><%= lang.frontpage_corner_joinroom_button %></h5>
+					</label>
+				</div>
+				<div class="modal-body text-center">
+					<form id="formRoomPassword" class="form-horizontal" method="post" action="/checkroompassword" target="respTmp">
+						<div class="form-group">
+							<label for="roompassword" class="col-sm-offset-1 col-sm-3 control-label labelNormal colorAccent"><%= lang.frontpage_room_password %></label>
+							<div class="col-sm-7">
+								<input type="password" class="form-control" id="roompassword" name="roompassword">
+							</div>
+						</div>
+						<input id="roomwithpasswordid" name="roomwithpasswordid" type="hidden">
+						<div class="row">
+							<button type="submit" class="btn colorAccent divJoinRoomWithPassword fontNormal"><%= lang.frontpage_corner_joinroom_button %></button>
+						</div>
+					</form>
+					<div class="divSpace"></div>
+					<div class="divSpace"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="modalForgotPassword">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header bgAccentColor colorMain">
+					<label class="modal-title fontNormal labelNormal"><%= lang.frontpage_login_or_register %></h5>
+					</label>
+				</div>
+				<div class="modal-body text-center">
+					<form id="formRoomPassword" class="form-horizontal" method="post" action="/retrievepassword" target="respTmp">
+						<div class="form-group">
+							<label for="emailorusername" class="col-sm-offset-1 col-sm-3 control-label labelNormal colorAccent"><%= lang.frontpage_email_address_or_username %></label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" id="emailorusername" name="emailorusername">
+							</div>
+						</div>
+						<div class="row">
+							<button type="submit" class="btn colorAccent divSendForgottenPassword fontNormal"><%= lang.frontpage_retrieve_password %></button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="modalEmailVerification">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header bgAccentColor colorMain">
+					<label class="modal-title fontNormal labelNormal"><%= lang.frontpage_login_or_register %></h5>
+					</label>
+				</div>
+				<div class="modal-body text-center">
+					<form class="form-horizontal" method="post" action="/verifyemail" target="respTmp">
+						<div class="form-group">
+							<label for="emailverifycode" class="col-sm-offset-1 col-sm-3 control-label labelNormal colorAccent"><%= lang.frontpage_verify_code %></label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" id="emailverifycode" name="emailverifycode">
+							</div>
+						</div>
+						<div class="row">
+							<button type="submit" class="btn colorAccent divLogin fontNormal"><%= lang.frontpage_verify %></button>
+						</div>
+					</form>
+					<div class="divSpace"></div>
+					<div class="divSpace"></div>
+					<div class="row">
+						<a class="colorAccent fontSmall" href="/resendverifycode" target="respTmp"><%= lang.frontpage_resend_verify_code %></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<iframe id="respTmp" name="respTmp" style="display: none;">
+	</iframe>
+	<% include ./common_script.ejs %>
+	<script src="socket.io-1.2.0.js"></script>
+		<script type="text/javascript">
+			<% if( typeof loadMoreButton !== 'undefined') { -%>
+
+				var lang_frontpage_room = "<%= lang.frontpage_room_ %>";
+				var lang_frontpage_online = "<%= lang.frontpage_online %>";
+				var lang_frontpage_corner_joinroom_button = "<%= lang.frontpage_corner_joinroom_button %>";
+
+				var showedRoomCount = <%=showedRoomCount%>;
+
+			<% } %>
+			var isLoggedIn = <%= session.isLoggedIn == true ? "true" : "false" %>;
+
+			// process joinRoom results.
+
+			var joinRoom = (ret) => {
+
+				if (ret.status == "fail") {
+					toastr.error(ret.msg, "<%= lang.frontpage_error %>");
+					if (ret.type == "needtologin") {
+						$('#modalLogin').modal('show');
+						return;
+					}
+					if( ret.type == "roompasswordfail"){
+						$('#modalRoomPassword').modal('show');
+						return;
+					}
+					return;
+				}
+
+				if (ret.status == "ok") {
+					if (ret.type == "joinroom") {
+						toastr.success(ret.msg, "<%= lang.frontpage_success %>");
+						url = ret.data;
+						window.location.href = url;
+					}
+				}
+			}
+
+			var onJoinRoomButtonClick = function(event) {
+				var roomId = $(this).attr("roomId");
+				if (isLoggedIn == true) {
+					// just need to send join room request.
+
+					console.log(this);
+
+					//check if room is password protected.
+					var isProtected = $(this).attr("isProtected");
+
+					console.log(isProtected);
+
+					if (isProtected == "true") {
+
+						// show room password input modal box.
+
+						//$("#divJoinRoomWithPassword").attr("roomId", roomId);
+						// set room id at form.
+
+						$("#roomwithpasswordid").val(roomId);
+
+						$('#modalRoomPassword').modal('show');
+					} else {
+						//get room id and goto room page.
+						$.ajax({
+							url: "<%= hostUrl %>/joinroom",
+							data: {
+								roomid: roomId
+							},
+							method: 'post',
+							success: function(ret) {
+								joinRoom(ret);
+							},
+							error: function() {
+								toastr.error("<%= lang.frontpage_internal_server_error %>", "<%= lang.frontpage_error %>");
+							}
+						});
+					}
+				} else {
+					$('#modalLogin').modal('show');
+				}
+			}
+
+			var addRooms = function(ret){
+				// if(ret.hasMore == false){
+				// 	$("#btnLoadMoreRoom").hide();
+				// }
+				var data = ret.data;
+				if(data.length == 0){
+					$("#btnLoadMoreRoom").hide();
+					return;
+				}
+				for(i in data){
+					var html = "";
+					html += '<div class="divOneChatRoom clearfix" style="background-image: url(\'' + data[i].image  + '\');" roomId="' + data[i].id + '" isProtected="' + ((data[i].is_password_protected == "YES") ? "true" : "false") + '" >';
+					html += '<div class="divMicInfo">';
+					html += '	<div class="divMicUserInfo divOpacityEffect clearfix">';
+					
+
+
+
+					html += '	</div>';
+					html += '</div>';
+					html += '<div class="divRoomInfo bgAccentColor colorMain divOpacityEffect fontNormal clearfix">';
+					html += '	<div class="divRoomNameAndOnlineUserCount clearfix">';
+					html += '		<div class="divRoomName">';
+					html += '			<span>' + lang_frontpage_room + data[i].room_name + '</span>';
+					html += '		</div>';
+					html += '		<div class="divOnlineUserCount">';
+					html += '			<span>' + lang_frontpage_online + ' (' + data[i].online_user_count + '/' + data[i].capacity + ')</span>';
+					html += '		</div>';
+					html += '	</div>';
+					html += '	<div class="divRoomDescription">';
+					html += '		<span class="fontSmall">' + data[i].detail + '</span>';
+					html += '	</div>';
+					html += '</div>';
+					html += '<div class="btn divJoinRoomButton bgAccentColor divOpacityEffect" roomId="' + data[i].id + '" isProtected="' + ((data[i].is_password_protected == "YES") ? "true" : "false") + '">';
+					html += '	<span class="colorMain fontNormal">' + lang_frontpage_corner_joinroom_button + '</span>';
+					html += '</div>';
+					html += '</div>';
+
+					console.log(html);
+
+					$("#id_divChatrooms").append(html);
+					$(".divOneChatRoom").height($(".divOneChatRoom").width() * 0.75);
+
+
+					// $(".divOneChatRoom").off("click").on("click", function(){
+					// 	$(this).find(".divJoinRoomButton")[0].click();
+					// });
+
+
+					// $(".divJoinRoomButton").off("click").on("click", onJoinRoomButtonClick);
+
+					$(".divOneChatRoom").off("click").on("click", onJoinRoomButtonClick);
+
+				}
+
+				showedRoomCount += data.length;
+			}
+		jQuery(document).ready(function($) {
+
+			<% if( typeof loadMoreButton !== 'undefined') { -%>
+			
+			$("#btnLoadMoreRoom").on("click", function(){
+
+				$.ajax({
+					url: "<%= hostUrl %>/getmorerooms",
+					data: {
+						showed_room_count: showedRoomCount
+					},
+					method: 'get',
+					success: function(ret) {
+						addRooms(ret);
+
+					},
+					error: function() {
+						//toastr.error("<%= lang.frontpage_internal_server_error %>", "<%= lang.frontpage_error %>");
+					}
+				});
+
+			});
+
+			<% } %>
+			
+
+			// socket for navbar.
+			var socket = io();
+			socket.on("navbar_info_change", function(data) {
+				navbarInfo = data;
+				$("#id_spanNavbarActiveRoomsCount").text(navbarInfo.activateRoomCount);
+				$("#id_spanNavbarAllRoomsCount").text(navbarInfo.allRoomCount);
+				$("#id_spanNavbarOnlineUsersCount").text(navbarInfo.onlineUserCount);
+
+				var ulActiveRoomDropDownHtml = "";
+
+
+		    	for( i = 0; i< navbarInfo.activateRoomLinks.length; i++)  {
+		    		ulActiveRoomDropDownHtml +=	'<li>' + 
+		    									'<a href="' + navbarInfo.activateRoomLinks[i].room_url + '">' +
+		    									navbarInfo.roomInfoArray[navbarInfo.activateRoomLinks[i].room_id]+
+		    									'</a>' +
+		    									'</li>';
+		    	}
+		    	$("#id_ulActiveRoomDropDown").html(ulActiveRoomDropDownHtml);
+		    	window.location.reload();
+			});
+
+
+
+			$(".divOneChatRoom").height($(".divOneChatRoom").width() * 0.75);
+			$( window ).resize(function() {
+
+				setTimeout(function(){
+					// alert($(".divOneChatRoom").width());
+					$(".divOneChatRoom").height($(".divOneChatRoom").width() * 0.75);
+
+				}, 10);
+				
+			  //$( "#log" ).append( "<div>Handler for .resize() called.</div>" );
+			});
+			
+			
+
+			
+
+			// this script for placing modal box at the center of screen.
+			$(function() {
+				function reposition() {
+					var modal = $(this),
+						dialog = modal.find('.modal-dialog');
+					modal.css('display', 'block');
+
+					// Dividing by two centers the modal exactly, but dividing by three 
+					// or four works better for larger screens.
+					dialog.css("margin-top", Math.max(0, ($(window).height() - dialog.height()) / 2));
+				}
+				// Reposition when a modal is shown
+				$('.modal').on('show.bs.modal', reposition);
+				// Reposition when the window is resized
+				$(window).on('resize', function() {
+					$('.modal:visible').each(reposition);
+				});
+			});
+
+			// $(".divOneChatRoom").on("click", function(){
+			// 	$(this).find(".divJoinRoomButton")[0].click();
+			// });
+
+			// actions for join room button at top right of room image.
+			//$(".divJoinRoomButton").on('click', onJoinRoomButtonClick);
+
+			$(".divOneChatRoom").on("click", onJoinRoomButtonClick);
+
+			// actions for register button.
+			$("#btnRegister").on("click", function() {
+				$('#modalLogin').modal('hide');
+				$('#modalRegister').modal('show');
+			});
+
+
+			// avater image event handler on register modal
+			$("#inputAvatarImg").change(function() {
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					$("#userAvatar").attr("src", e.target.result);
+				}
+				reader.readAsDataURL($(this)[0].files[0]);
+				// console.log($(this)[0].files[0]);
+			});
+
+			$("#anchorForgotPassword").on("click", function(){
+				$('#modalLogin').modal('hide');
+				$('#modalForgotPassword').modal('show');
+			});
+
+			// after register form post.
+			$("#respTmp").on("load", function() {
+				//$(".divCover").removeClass('csspinner load1');
+				var ret = $(this).contents().find("body").text();
+
+				ret = JSON.parse(ret);
+
+				// console.log(ret);
+
+				if (ret.status == "fail") {
+					//swal ( "Error" ,  ret.msg ,  "error" );
+					if (ret.type == "login_email_not_verified") {
+						toastr.error(ret.msg, "<%= lang.frontpage_error %>");
+						$("#emailverifycode").val("");
+						$('#modalEmailVerification').modal('show');
+						return;
+					}
+					if (ret.type == "needtologin") {
+						toastr.error(ret.msg, "<%= lang.frontpage_error %>");
+						return;
+					}
+
+					toastr.error(ret.msg, "Error");
+					return;
+				}
+
+				if (ret.status == "ok") {
+					if(ret.type == "showcreateroom"){
+						window.location.href = ret.data;
+						return;
+					}
+					if (ret.type == "register") {
+						toastr.success(ret.msg, "<%= lang.frontpage_success %>");
+						$('#modalRegister').modal('hide');
+					}
+					if (ret.type == "emailverify") {
+						swal("<%= lang.frontpage_success %>", ret.msg, "success").then((value) => {
+							$('#modalEmailVerification').modal('hide');
+							$('#modalLogin').modal('show');
+						});
+					}
+					if (ret.type == "resend_email_verify_code") {
+						toastr.success(ret.msg, "<%= lang.frontpage_success %>");
+					}
+					if (ret.type == "login") {
+						toastr.success(ret.msg, "<%= lang.frontpage_success %>");
+						url = ret.data;
+						window.location.href = url;
+					}
+					if (ret.type == "checkroompassword") {
+						// toastr.success(ret.msg, "<%= lang.frontpage_success %>");
+						roomId = ret.data;
+
+						$.ajax({
+							url: "<%= hostUrl %>/joinroom",
+							data: {
+								roomid: roomId
+							},
+							method: 'post',
+							success: function(ret) {
+								joinRoom(ret);
+							},
+							error: function() {
+								toastr.error("<%= lang.frontpage_internal_server_error %>", "<%= lang.frontpage_error %>");
+							}
+						});
+
+					}
+					if( ret.type == "forgotten_password_email_sent"){
+						toastr.success(ret.msg, "<%= lang.frontpage_success %>");
+						$('#modalForgotPassword').modal('hide');
+					}
+				}
+
+			});
+
+		});
+		</script>
+</body>
+
+</html>

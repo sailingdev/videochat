@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+<head>
+    <% include ./header %>
+</head>
+<body class="bs-docs-home">
+    <% include ./navbar %>
+    <div>
+        <div class="container-fluid text-center" style="margin-top: 3%">
+            <h1><%= lang.user_manager%></h1>
+        </div>
+        <div class="container">
+            <form action="/users" method="post">
+            <div class="row">
+                <div class="col-sm-1" style="float: right; height: 40px; width: 60px">
+                    <a class="btn btn-danger" href="/dashboard">
+                        <i class="material-icons">&#xe5d9;</i>
+                    </a>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table id="main_table">
+                    <tr>
+                        <th>No</th>
+                        <th>User Name</th>
+                        <th>Email</th>
+                        <th>avatar</th>
+                        <th>Network Status</th>
+                        <th>Activate Status</th>
+                        <th>Email Verified Status</th>
+                        <th>Text Chat Activated</th>
+                        <th>Voice Chat Activated</th>
+                        <th>Video Chat Activated</th>
+                        <th width="13%">Create DateTime</th>
+                    </tr>
+                    <% for(var i = 0; i < user_list.length; i++) { %>
+                        <tr>
+                            <td><%= i + 1%></td>
+                            <td><%=user_list[i].username %></td>
+                            <td><%=user_list[i].email %></td>
+                            <td>
+                                <img src="<%= user_list[i].avatar %>" class="img-circle" style="width: 40px; height: 40px">
+                            </td>
+                            <td><%=user_list[i].status %></td>
+                            <td>
+                                <% if (user_list[i].is_activated == 'YES') { %>
+                                    <input id="chk_activated_<%=i + 1 %>" type="checkbox" checked>
+                                <% } else { %>
+                                    <input id="chk_activated_<%=i + 1 %>" type="checkbox">
+                                <% } %>
+                            </td>
+                            <td>
+                                <% if (user_list[i].is_email_verified == 'YES') { %>
+                                <input id="chk_email_<%=i + 1 %>" type="checkbox" checked disabled>
+                                <% } else { %>
+                                <input id="chk_email_<%=i + 1 %>" type="checkbox" disabled>
+                                <% } %>
+                            </td>
+                            <td>
+                                <% if (user_list[i].is_text_enabled == 'YES') { %>
+                                <input id="chk_text_<%=i + 1 %>" type="checkbox" checked>
+                                <% } else { %>
+                                <input id="chk_text_<%=i + 1 %>" type="checkbox">
+                                <% } %>
+                            </td>
+                            <td>
+                                <% if (user_list[i].is_voice_enabled == 'YES') { %>
+                                <input id="chk_voice_<%=i + 1 %>" type="checkbox" checked>
+                                <% } else { %>
+                                <input id="chk_voice_<%=i + 1 %>" type="checkbox">
+                                <% } %>
+                            </td>
+                            <td>
+                                <% if (user_list[i].is_video_enabled == 'YES') { %>
+                                <input id="chk_video_<%=i + 1 %>" type="checkbox" checked>
+                                <% } else { %>
+                                <input id="chk_video_<%=i + 1 %>" type="checkbox">
+                                <% } %>
+                            </td>
+                            <td><%=user_list[i].create_datetime %></td>
+                        </tr>
+                    <% } %>
+                </table>
+            </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+
+</html>
+
+<script>
+
+    jQuery(document).ready(function() {
+
+        $('input[type = checkbox]').off('change').on('change', function(){
+
+            var id = $(this)[0]['id'];
+
+            var index = id.split('_')[2];
+            var kind = id.split('_')[1];
+
+            $.ajax({
+                url: '/change_user_status',
+                data: {
+                    id: index,
+                    kind: kind,
+                    value: $('#' + id).is(":checked")
+                },
+                method: 'post',
+                success: function (resp) {
+                    if (resp.isSuccess){
+                        toastr.success(resp.message);
+                    } else {
+                        toastr.error(resp.message);
+                    }
+                }
+            });
+
+        });
+
+    });
+
+</script>

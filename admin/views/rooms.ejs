@@ -1,0 +1,336 @@
+<!doctype html>
+<html>
+<head>
+    <% include ./header %>
+
+    <style type="text/css">
+        .divSpace {
+            height: 10px;
+        }
+        #imgRoom {
+            width: 300px;
+            height: 300px;
+        }
+    </style>
+</head>
+<body class="bs-docs-home">
+    <% include ./navbar %>
+    <div>
+        <div class="container-fluid text-center" style="margin-top: 3%">
+            <h1><%= lang.room_manager%></h1>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-1">
+                    <button class="btn btn-danger"  id="btnAddRoom" style="float:right;height: 40px; width: 60px"><span class="fa fa-plus">&nbsp</span><span class="fa fa-group"></span></button>
+                </div>
+                <div class="col-sm-1" style="float:right;">
+                    <a class="btn btn-danger" href="/dashboard" style="float:left;height: 40px; width: 60px"><i class="material-icons">&#xe5d9;</i></a>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <tr>
+                        <th>No</th>
+                        <th>Room Name</th>
+                        <th>Capacity</th>
+                        <th>Password Protected</th>
+                        <th>Text Chat Activated</th>
+                        <th>Voice Chat Activated</th>
+                        <th>Video Chat Activated</th>
+                        <th>Room Activate Status</th>
+                        <th>Create DateTime</th>
+                        <th>Last Event DateTime</th>
+                        <th width="140px">Action</th>
+                    </tr>
+                    <% for(var i = 0; i < roomInfo.length; i++) { %>
+                        <tr>
+                            <td><%= i + 1%></td>
+                            <td id = "td_name_<%= i %>" ><%= roomInfo[i].room_name %></td>
+                            <td id = "td_capacity_<%= i %>" ><%= roomInfo[i].capacity %></td>
+                            <td id = "td_password_<%= i %>" ><%= roomInfo[i].is_password_protected %></td>
+                            <td id = "td_is_text_<%= i %>" ><%= roomInfo[i].is_text %></td>
+                            <td id = "td_is_voice_<%= i %>" ><%= roomInfo[i].is_voice %></td>
+                            <td id = "td_is_video_<%= i %>" ><%= roomInfo[i].is_video %></td>
+                            <td id = "td_is_activated_<%= i %>" ><%= roomInfo[i].is_activated %></td>
+                            <td id = "td_create_datetime_<%= i %>" ><%= roomInfo[i].create_datetime %></td>
+                            <td id = "td_last_event_datetime_<%= i %>" ><%= roomInfo[i].last_event_datetime %></td>
+                            <td>
+                                <div style="display: inline">
+                                    <button name = "edit" class="btn btn-warning" tid = "<%= i %>" roomid="<%= roomInfo[i].id %>" ><i class="fa fa-pencil"></i></button>
+                                    <button name = "delete" class="btn btn-danger" tid = "<%= i %>"  roomid="<%= roomInfo[i].id %>" ><i class="fa fa-trash-o"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    <% } %>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal_room_update">
+      <div class="modal-dialog" role="dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Room</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <form action = "/updateroom" method="post" target="respTmp" id="formRoomUpdate">
+
+                <input id = "roomid" type="hidden" name="roomid">
+
+                <div class="input-group">
+                  <span class="input-group-addon">Room Name</span>
+                  <input id="roomname" type="text" class="form-control" name="roomname" placeholder="Room Name">
+                </div>
+                <div class="divSpace">
+                </div>
+                <div class="input-group">
+                  <span class="input-group-addon">Room Capacity</span>
+                  <input id="roomcapacity" type="number" class="form-control" name="roomcapacity" placeholder="Room Capacity">
+                </div>
+                <div class="divSpace">
+                </div>
+
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <input type="checkbox" id="input_text_enabled" name = "input_text_enabled">
+                  </span>
+                  <label class="form-control">Enable Text Chatting</label>
+                </div>
+                <div class="divSpace">
+                </div>
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <input type="checkbox" id="input_voice_enabled" name = "input_voice_enabled">
+                  </span>
+                  <label class="form-control">Enable Voice Chatting</label>
+                </div>
+                <div class="divSpace">
+                </div>
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <input type="checkbox" id="input_video_enabled" name = "input_video_enabled">
+                  </span>
+                  <label class="form-control">Enable Video Chatting</label>
+                </div>
+                <div class="divSpace">
+                </div>
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <input type="checkbox" id="input_room_activated" name = "input_room_activated">
+                  </span>
+                  <label class="form-control">Active Room</label>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_selectModerator">Moderator: </label>
+                    <select class="form-control" id="id_selectModerator" name="roommoderator">
+                        <option value="0" >keep old</option>
+                        <% for( i=0;i<user_list.length;i++ ) { -%>
+                            <option value="<%= user_list[i].id %>" ><%=user_list[i].username%></option>
+                        <% } %>
+                    </select>
+                </div>
+
+
+            </form>
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="btnUpdateRoom" style="width: inherit;" >Update Room</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="modal_room_create">
+      <div class="modal-dialog" role="dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Create Room</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <form action = "/createroom" method="post" target="respTmp" id="formRoomCreate" enctype="multipart/form-data">
+                <div class="input-group">
+                  <span class="input-group-addon">Room Name</span>
+                  <input id="newroomname" type="text" class="form-control" name="newroomname" placeholder="Room Name">
+                </div>
+                <div class="divSpace">
+                </div>
+                <div class="input-group">
+                  <span class="input-group-addon">Room Capacity</span>
+                  <input id="newroomcapacity" type="number" class="form-control" name="newroomcapacity" placeholder="Room Capacity">
+                </div>
+                <div class="divSpace">
+                </div>
+                <div class="input-group">
+                  <span class="input-group-addon">Room Password</span>
+                  <input id="newroompassword" type="password" class="form-control" name="newroompassword" placeholder="Room Password">
+                </div>
+                <div class="divSpace">
+                </div>
+                <div class="input-group">
+                  <span class="input-group-addon">Room Detail</span>
+                  <input id="newroomdetail" type="text" class="form-control" name="newroomdetail" placeholder="Room Detail">
+                </div>
+                <div class="divSpace">
+                </div>
+
+                <div class="form-group" >
+                    <label class="control-label" for="inputRoomImg">Room Image</label>
+                    <div>
+                        <input style="display: none;" type="file" id="inputRoomImg" name="roomimage">
+                        <label id="lblInputAvatarImg" for="inputRoomImg">
+                            <img id="imgRoom" src="https://45.55.70.51:15001/anonymous.png">
+                        </label>
+                    </div>
+                </div>
+                <div class="divSpace">
+                </div>
+
+
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <input type="checkbox" id="new_room_input_text_enabled" name = "new_room_input_text_enabled">
+                  </span>
+                  <label class="form-control">Enable Text Chatting</label>
+                </div>
+                <div class="divSpace">
+                </div>
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <input type="checkbox" id="new_room_input_voice_enabled" name = "new_room_input_voice_enabled">
+                  </span>
+                  <label class="form-control">Enable Voice Chatting</label>
+                </div>
+                <div class="divSpace">
+                </div>
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <input type="checkbox" id="new_room_input_video_enabled" name = "new_room_input_video_enabled">
+                  </span>
+                  <label class="form-control">Enable Video Chatting</label>
+                </div>
+                <div class="divSpace">
+                </div>
+                <div class="divSpace">
+                </div>
+
+                <div class="form-group">
+                    <label for="moderator">Moderator: </label>
+                    <select class="form-control" id="moderator_id" name="moderator_id">
+                        <% for( i=0;i<user_list.length;i++ ) { -%>
+                            <option value="<%= user_list[i].id %>" ><%=user_list[i].username%></option>
+                        <% } %>
+                    </select>
+                </div>
+
+
+            </form>
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="btnCreateRoom" style="width: inherit;" >Create Room</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <iframe id="respTmp" name="respTmp" style="display: none;">
+    </iframe>
+
+
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            $('button[name = edit]').on('click', function () {
+
+                var roomId = $(this).attr("roomid");
+                //$("#btnUpdateRoom").attr("roomid", roomId);
+
+
+                var tId = $(this).attr("tid");
+
+
+                var name = $("#td_name_" + tId).text();
+                var capacity = $("#td_capacity_" + tId).text();
+                var is_text = $("#td_is_text_" + tId).text();
+                var is_voice = $("#td_is_voice_" + tId).text();
+                var is_video = $("#td_is_video_" + tId).text();
+                var is_activated = $("#td_is_activated_" + tId).text();
+
+                $("#roomid").val(roomId);
+                $("#roomname").val(name);
+                $("#roomcapacity").val(capacity);
+                $("#input_text_enabled").prop('checked', is_text == "YES");
+                $("#input_voice_enabled").prop('checked', is_voice == "YES");
+                $("#input_video_enabled").prop('checked', is_video == "YES");
+                $("#input_room_activated").prop('checked', is_activated == "YES");
+
+                $('#modal_room_update').modal();
+
+            });
+
+            $('button[name = delete]').on('click', function () {
+                var roomId = $(this).attr("roomid");
+                $.ajax({
+                    url: '/delete_room',
+                    data: {
+                        roomid: roomId
+                    },
+                    method: 'post',
+                    success: function (resp) {
+                        window.location.reload();
+                    }
+                });
+            });
+
+            $("#btnUpdateRoom").on("click", function(){
+                $("#formRoomUpdate").submit();
+            });
+            $("#btnCreateRoom").on("click", function(){
+                $("#formRoomCreate").submit();
+            });
+
+            $("#btnAddRoom").on("click", function(){
+                $("#modal_room_create").modal();
+            });
+
+            // room image event handler.
+            $("#inputRoomImg").change(function() {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $("#imgRoom").attr("src", e.target.result);
+                }
+                reader.readAsDataURL($(this)[0].files[0]);
+                // console.log($(this)[0].files[0]);
+            });
+            
+            $("#respTmp").on("load", function() {
+                var ret = $(this).contents().find("body").text();
+                ret = JSON.parse(ret);
+
+                if (ret.status == "fail") {
+                    toastr.error(ret.msg, "Error");
+                    return;
+                }
+                if (ret.status == "ok") {
+                    window.location.reload();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

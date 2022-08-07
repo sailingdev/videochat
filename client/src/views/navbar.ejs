@@ -1,0 +1,42 @@
+<nav class="navbar bgMainColor">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="<%= hostUrl %>">
+				<img src="/navbar_logo.png?<%= Math.random()*(89999) + 10000 %>">
+			</a>
+		</div>
+		<div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav">
+			</ul>
+			<ul class="nav navbar-nav navbar-right fontNormal">
+				<li id = "id_liCreateRoom"> <a href="/createroom_show_request" target="respTmp"> <span><%= lang.navbar_create_room %></span> </a> </li>
+				<li  id = "id_liActivateRoom" class="dropdown">
+					<a href="<%= hostUrl + "/frontpage" %>" class="dropdown-toggle disabled" data-toggle="dropdown"><span><%= lang.navbar_active_rooms %>  (<span id="id_spanNavbarActiveRoomsCount"><%= navbarInfo.activateRoomCount %></span>) </span>
+					</a>
+				    
+				</li>
+
+				<li id = "id_liAllRoom" class="dropdown">
+					<a href="<%= hostUrl + "/frontpage?showall=true" %>" class="dropdown-toggle disabled" data-toggle="dropdown"><span><%= lang.navbar_all_rooms %> (<span id="id_spanNavbarAllRoomsCount"><%= navbarInfo.allRoomCount %></span>) </span></a>
+		              
+					
+				</li>
+			
+			
+				<li> <a href="#">  </a> </li>
+
+
+				<li id = "id_liTotalUserOnline"> <a href="#"> <span><%= lang.navbar_total_users_online %> <span id="id_spanNavbarOnlineUsersCount"> <%= navbarInfo.onlineUserCount %> </span> </span> </a> </li>
+
+			<% if( typeof isLoggedIn !== 'undefined') { -%>
+				<li id = "id_liLogInOut" > <a href="/<%= isLoggedIn ? "logout" : "login" %>"> <span><%= isLoggedIn? lang.navbar_logout : lang.navbar_logout %></span> </a> </li>
+				<% } %>
+					</ul>
+		</div>
+	</div>
+</nav>

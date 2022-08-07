@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+    <% include ./header %>
+</head>
+<body class="bs-docs-home">
+    <% include ./navbar %>
+    <div>
+        <div class="container-fluid text-center" style="margin-top: 3%">
+            <h1><%= lang.language_manager%></h1>
+        </div>
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-sm-1" style="float:right;">
+                    <a class="btn btn-danger" href="/dashboard" style="float:left;height: 40px; width: 60px"><i class="material-icons">&#xe5d9;</i></a>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <tr>
+                        <th width="10px">No</th>
+                        <th width="40%" >Key</th>
+                        <th width="40%" >Value</th>
+                        <th width="100px">Action</th>
+                    </tr>
+                    <% for(var i = 0; i < langdata.length; i++) { %>
+                        <tr>
+                            <td><%= i + 1%></td>
+                            <td style="text-align: right;" id="table_lang_key_id_<%=i + 1 %>" ><%=langdata[i].key %></td>
+                            <td style="text-align: left;" id="table_lang_value_id_<%=i + 1 %>"><%=langdata[i].value%></td>
+                            <td>
+                                <div style="display: inline">
+                                    <button id="btnLangEdit_<%=i + 1 %>" name="edit" class="btn btn-warning" lang_id=<%= langdata[i].id %> ><i class="fa fa-pencil"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    <% } %>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal_lang_edit" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 id="text_modal_title" class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-sm-3 col-sm-offset-1 text-center">
+                            <p>Key</p>
+                        </div>
+                        <div class="col-sm-7">
+                            <input type="hidden" name="lang_id" id="id_lang_id" style="display: none;">
+                            <input type="text" name="lang_key" id="id_lang_key" style="width: 100%" disabled>
+                            <input type="text" name="lang_value" id="id_lang_value" style="width: 100%;">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-o btn-sm" data-dismiss="modal"><%=lang.close %></button>
+                    <button type="button" id="btnUpdate" class="btn btn-info btn-o btn-sm" data-dismiss="modal"><%=lang.save %></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+<script>
+
+    jQuery(document).ready(function() {
+
+        $('button[name = edit]').on('click', function () {
+
+            $('#text_modal_title').text('Language Edit');
+
+            lang_id = $(this).attr('lang_id');
+            index = $(this)[0]['id'].split('_')[1];
+
+            $("#id_lang_id").val(lang_id);
+            $('#id_lang_key').val($('#table_lang_key_id_' + index).text());
+            $('#id_lang_value').val($('#table_lang_value_id_' + index).text());
+
+            $('#modal_lang_edit').modal();
+        });
+
+        $('#btnUpdate').on('click', function () {
+
+            var langId = $("#id_lang_id").val();
+            var langKey = $('#id_lang_key').val();
+            var langValue = $('#id_lang_value').val();
+            
+            $.ajax({
+                url: '/update_lang',
+                data: {
+                    id: langId,
+                    key: langKey,
+                    value: langValue
+                },
+                method: 'post',
+                success: function (resp) {
+                    if (resp.type == 'success'){
+                        window.location.reload();
+                    } else {
+                        toastr.error(resp.msg);
+                    }
+                }
+            });
+        })
+
+    });
+
+</script>

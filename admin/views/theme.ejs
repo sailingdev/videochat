@@ -1,0 +1,470 @@
+<!doctype html>
+<html>
+<head>
+    <% include ./header %>
+    <style>
+
+        .colorpicker {
+            z-index: 999999;!important;
+        }
+        .colorpicker-2x .colorpicker-saturation {
+            width: 200px;
+            height: 200px;
+        }
+
+        .colorpicker-2x .colorpicker-hue,
+        .colorpicker-2x .colorpicker-alpha {
+            width: 30px;
+            height: 200px;
+        }
+
+        .colorpicker-2x .colorpicker-color,
+        .colorpicker-2x .colorpicker-color div {
+            height: 30px;
+        }
+    </style>
+</head>
+<body class="bs-docs-home">
+    <% include ./navbar %>
+    <div>
+        <div class="container-fluid text-center" style="margin-top: 3%">
+            <h1><%= lang.theme_manager%></h1>
+        </div>
+        <div class="container">
+            <img src="/image/front_page.png" class="col-sm-6">
+            <img src="/image/public_chat_page.png" class="col-sm-6">
+        </div>
+        
+        <form class="container" style="margin-top: 20px; margin-bottom: 20px;" enctype="multipart/form-data" target="respTmp"  method="post" action="/updatelogo">
+            <label id="lblInputLogoImg" for="inputLogoImg">
+                Choose Logo
+                <input style="" type="file" id="inputLogoImg" name="logoimage">
+            </label>
+            <button type="submit" id="id_buttonUpdateLogo"> Update Logo </button>
+            
+            
+        </form>
+        <iframe id="respTmp" name="respTmp" style="display: none;">
+        </iframe>
+        <div class="container">
+            <ul class="nav nav-tabs">
+                <li id="menu_font_size"><a data-toggle="tab" href="#home">Font Size</a></li>
+                <li id="menu_font_family"><a data-toggle="tab" href="#menu2">Font Family</a></li>
+                <li id="menu_bg_color"><a data-toggle="tab" href="#menu1">Backgorund Color</a></li>
+                <li style="float: right">
+                    <div class="col-sm-1">
+                        <a class="btn btn-danger" href="/dashboard" style="height: 40px; width: 60px">
+                            <i class="material-icons">&#xe5d9;</i>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div id="home" class="tab-pane fade table-responsive">
+                    <table>
+                        <tr>
+                            <th>No</th>
+                            <th>Name</th>
+                            <th>Font Size</th>
+                            <th>Comment</th>
+                            <th width="50px">Action</th>
+                        </tr>
+                        <% for(i = 0; i < theme['size_data'].length; i++) {%>
+                            <tr>
+                                <td id="table_size_id_<%= i + 1 %>"><%= i + 1 %></td>
+                                <td id="table_size_name_<%= i + 1 %>"><%=theme['size_data'][i]['name'] %></td>
+                                <td id="table_size_size_<%= i + 1 %>"><%=theme['size_data'][i]['size'] %></td>
+                                <td id="table_size_comment_<%= i + 1 %>"><%=theme['size_data'][i]['comment'] %></td>
+                                <td>
+                                    <button class="btn btn-warning" id="btnfontsize_<%=i + 1 %>" name="font_size"><i class="fa fa-pencil"></i></button>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </table>
+                </div>
+                <div id="menu1" class="tab-pane fade table-responsive">
+                    <table>
+                        <tr>
+                            <th>No</th>
+                            <th>Name</th>
+                            <th>Background Color</th>
+                            <th>Comment</th>
+                            <th width="50px">Action</th>
+                        </tr>
+                        <% for(i = 0; i < theme['color_data'].length; i++) {%>
+                        <tr>
+                            <td id="table_color_id_<%= i + 1 %>"><%= i + 1 %></td>
+                            <td id="table_color_name_<%= i + 1 %>"><%=theme['color_data'][i]['name'] %></td>
+                            <td id="table_color_value_<%= i + 1 %>"><%=theme['color_data'][i]['color'] %></td>
+                            <td id="table_color_comment_<%= i + 1 %>"><%=theme['color_data'][i]['comment'] %></td>
+                            <td>
+                                <button class="btn btn-warning" id="btnbgcolor_<%=i + 1 %>" name="bg_color"><i class="fa fa-pencil"></i></button>
+                            </td>
+                        </tr>
+                        <% } %>
+                    </table>
+                </div>
+                <div id="menu2" class="tab-pane fade table-responsive">
+                    <table>
+                        <tr>
+                            <th>No</th>
+                            <th>Name</th>
+                            <th>Font Family</th>
+                            <th>Comment</th>
+                            <th width="50px">Action</th>
+                        </tr>
+                        <% for(i = 0; i < theme['family_data'].length; i++) {%>
+                        <tr>
+                            <td id="table_family_id_<%= i + 1 %>"><%= i + 1 %></td>
+                            <td id="table_family_name_<%= i + 1 %>"><%=theme['family_data'][i]['name'] %></td>
+                            <td id="table_family_family_<%= i + 1 %>"><%=theme['family_data'][i]['font_family'] %></td>
+                            <td id="table_family_comment_<%= i + 1 %>"><%=theme['family_data'][i]['comment'] %></td>
+                            <td>
+                                <button class="btn btn-warning" id="btnfontfamily_<%=i + 1 %>" name="font_family"><i class="fa fa-pencil"></i></button>
+                            </td>
+                        </tr>
+                        <% } %>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal_font_size" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"><%=lang.font_size_edit_modal %></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-3 col-sm-offset-1 text-center">
+                            <p>Name</p>
+                        </div>
+                        <div class="col-sm-2">
+                            <p id="text_font_size_name"></p>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-sm-3 col-sm-offset-1 text-center">
+                            <p>Font Size</p>
+                        </div>
+                        <div class="col-sm-1" style="display: inline">
+                            <input id="text_font_size_value" name="size" type="number">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-sm-3 col-sm-offset-1 text-center">
+                            <p>Comment</p>
+                        </div>
+                        <div class="col-sm-7" style="display: inline">
+                            <p id="textarea_font_size_comment"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-o btn-sm" data-dismiss="modal"><%=lang.close %></button>
+                    <button type="submit" id="btnSaveThemeFontSize" class="btn btn-info btn-o btn-sm" data-dismiss="modal"><%=lang.save %></button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal_font_family" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"><%=lang.font_family_edit_modal %></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-3 col-sm-offset-1 text-center">
+                            <p>Name</p>
+                        </div>
+                        <div class="col-sm-2">
+                            <p id="text_font_family_name"></p>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-sm-3 col-sm-offset-1 text-center">
+                            <p>Font Family</p>
+                        </div>
+                        <div class="col-sm-1" style="display: inline">
+                            <select id="text_font_family_value" name="family">
+                                <% for (i = 0; i < font_family.length; i++) { %>
+                                <option name="option_font_family_<%=i + 1 %>"><%=font_family[i]['font_family']%></option>
+                                <% } %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-sm-3 col-sm-offset-1 text-center">
+                            <p>Comment</p>
+                        </div>
+                        <div class="col-sm-7" style="display: inline">
+                            <p id="textarea_font_family_comment"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-o btn-sm" data-dismiss="modal"><%=lang.close %></button>
+                    <button type="button" id="btnSaveThemeFontFamily" class="btn btn-info btn-o btn-sm" data-dismiss="modal"><%=lang.save %></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal_bg_color" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"><%=lang.font_family_edit_modal %></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-3 col-sm-offset-1 text-center">
+                            <p>Name</p>
+                        </div>
+                        <div class="col-sm-2">
+                            <p id="text_bg_color_name"></p>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-sm-3 col-sm-offset-1 text-center" style="margin-top: 5px;">
+                            <p>Color</p>
+                        </div>
+                        <div id="cp9" class="col-sm-7 input-group colorpicker-component">
+                            <input id="text_color_picker_value" type="text" value="rgba(0, 0, 255, 1)" class="form-control" />
+                            <span class="input-group-addon"><i></i></span>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-sm-3 col-sm-offset-1 text-center">
+                            <p>Comment</p>
+                        </div>
+                        <div class="col-sm-7" style="display: inline">
+                            <p id="textarea_bg_color_comment"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-o btn-sm" data-dismiss="modal"><%=lang.close %></button>
+                    <button type="submit" id="btnSaveThemeBgColor" class="btn btn-info btn-o btn-sm" data-dismiss="modal"><%=lang.save %></button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+</html>
+
+
+<script>
+
+    jQuery(document).ready(function() {
+        $("#respTmp").on("load", function() {
+            //$(".divCover").removeClass('csspinner load1');
+            var ret = $(this).contents().find("body").text();
+
+            ret = JSON.parse(ret);
+
+            // console.log(ret);
+
+            if (ret.status == "fail") {
+                toastr.error(ret.msg, "Error");
+            }
+            if (ret.status == "ok") {
+                toastr.success(ret.msg, "Success");
+            }
+        });
+
+
+
+        //-------- get cookie -----------------///
+        text_cookie = decodeURIComponent(document.cookie);
+        active_tab = text_cookie.split('=')[1];
+
+        if (active_tab == 3){
+            $('#menu_font_size').removeClass('active');
+            $('#menu_bg_color').addClass('active');
+            $('#menu_font_family').removeClass('active');
+
+            $('#menu1').addClass('in');
+            $('#menu1').addClass('active');
+        } else if (active_tab == 2) {
+            $('#menu_font_size').removeClass('active');
+            $('#menu_font_family').addClass('active');
+            $('#menu_bg_color').removeClass('active');          
+
+            $('#menu2').addClass('in');
+            $('#menu2').addClass('active');
+        } else {
+            $('#menu_font_family').removeClass('active');
+            $('#menu_font_size').addClass('active');
+            $('#menu_bg_color').removeClass('active');
+
+            $('#home').addClass('in');
+            $('#home').addClass('active');
+        }
+
+        document.cookie = 'active_tab = 1';
+        ///------------------------------------///
+
+        $(function() {
+            $('#cp9').colorpicker({
+                customClass: 'colorpicker-2x',
+                sliders: {
+                    saturation: {
+                        maxLeft: 200,
+                        maxTop: 200
+                    },
+                    hue: {
+                        maxTop: 200
+                    },
+                    alpha: {
+                        maxTop: 200
+                    }
+                }
+            });
+        });
+
+        $('button[name = font_size]').on('click', function(){
+
+            id = $(this)[0]['id'];
+
+            index = id.split('_')[1];
+
+            $('#text_font_size_name').text($('#table_size_name_' + index).text());
+            $('#text_font_size_value').val($('#table_size_size_' + index).text());
+            $('#textarea_font_size_comment').text($('#table_size_comment_' + index).text());
+
+            $('#modal_font_size').modal();
+
+        });
+
+        $('button[name = font_family]').on('click', function(){
+
+            id = $(this)[0]['id'];
+
+            index = id.split('_')[1];
+
+            $('#text_font_family_name').text($('#table_family_name_' + index).text());
+            $('#textarea_font_family_comment').text($('#table_family_comment_' + index).text());
+
+            text_font_family = $('#table_family_family_' + index).text();
+
+            index = $("#text_font_family_value>option:contains(" + text_font_family + ")").index();
+            $('#text_font_family_value').prop('selectedIndex', index);
+
+            $('#modal_font_family').modal();
+
+        });
+
+        $('button[name = bg_color]').on('click', function(){
+
+            id = $(this)[0]['id'];
+
+            index = id.split('_')[1];
+
+            //text_color_picker_value
+            $('#text_bg_color_name').text($('#table_color_name_' + index).text());
+            $('#textarea_bg_color_comment').text($('#table_color_comment_' + index).text());
+
+            $('#text_color_picker_value').val($('#table_color_value_' + index).text())
+
+            $('#cp9').colorpicker('setValue', $('#table_color_value_' + index).text());
+
+            $('#modal_bg_color').modal();
+
+        });
+
+        $('#btnSaveThemeFontSize').on('click', function () {
+
+            name = $('#text_font_size_name').text();
+            size = $('#text_font_size_value').val();
+
+            document.cookie = 'active_tab = 1';
+
+            $.ajax({
+                url: '/change_theme_fontsize',
+                data: {
+                    name: name,
+                    size: size
+                },
+                method: 'post',
+                success: function (resp) {
+                    if (resp.type == 'success'){
+                        window.location.reload();
+                    } else {
+                        toastr.error(resp.msg);
+                    }
+                }
+            });
+
+        })
+        
+        $('#btnSaveThemeFontFamily').on('click', function () {
+
+            name = $('#text_font_family_name').text();
+            font = $('#text_font_family_value').val();
+
+            document.cookie = 'active_tab = 2';
+
+            $.ajax({
+                url: '/change_theme_fontfamily',
+                data: {
+                    name: name,
+                    font: font
+                },
+                method: 'post',
+                success: function (resp) {
+                    if (resp.type == 'success'){
+                        window.location.reload();
+                    } else {
+                        toastr.error(resp.msg);
+                    }
+                }
+            });
+
+        })
+        
+        $('#btnSaveThemeBgColor').on('click', function () {
+
+            name = $('#text_bg_color_name').text();
+            color_value = $('#text_color_picker_value').val();
+
+            document.cookie = 'active_tab = 3';
+
+            $.ajax({
+                url: '/change_theme_bgcolor',
+                data: {
+                    name: name,
+                    color: color_value
+                },
+                method: 'post',
+                success: function (resp) {
+                    if (resp.type == 'success'){
+                        window.location.reload();
+                    } else {
+                        toastr.error(resp.msg);
+                    }
+                }
+            });
+
+        })
+
+    });
+
+</script>

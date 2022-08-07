@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= lang.private_chat_page_title %>
+    </title>
+    <% include ./common_meta_styles.ejs %>
+        <style type="text/css">
+        * {
+            /*border-radius: 0 !important;*/
+            cursor: default;
+        }
+
+        button,
+        .btn,
+        .modal-body,
+        .modal-content {
+            border-radius: 0 !important;
+        }
+
+
+        .modal-content {
+            border: 0px;
+        }
+
+        .modal-header {
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+
+        input[type=checkbox] {
+            transform: scale(1.5);
+        }
+        /***********/
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        .divMainContainer {
+            width: 100%;
+            /*max-width: 1000px;*/
+            height: calc(100% - 72px);
+            margin: 0 auto;
+            padding: 10px;
+            padding-top: 0px;
+        }
+
+        .divRoomInfoAndChatList {
+            width: 79%;
+            margin-right: 1%;
+            height: 100%;
+            float: left;
+            display: inline;
+        }
+
+        .divRoomDescription {
+            width: 100%;
+            height: 60px;
+            padding: 10px;
+        }
+
+        .divChatList {
+            width: 100%;
+            height: calc(100% - 180px);
+            margin-bottom: 20px;
+        }
+
+        .ulChatList {
+            width: 100%;
+            list-style: none;
+            padding: 0px;
+            overflow-y: scroll;
+            /*overflow: hidden;*/
+            height: 100%;
+        }
+
+        .divChatItem {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .divSenderAvater {
+            width: 50px;
+            height: 50px;
+            display: inline;
+            float: left;
+        }
+
+        .divSenderAvater img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .divChatText {
+            width: calc(100% - 50px);
+            display: inline;
+            float: left;
+            padding-left: 10px;
+            word-break: break-word;
+        }
+
+        .divChatTime {
+            width: 100%;
+            text-align: right;
+        }
+
+        .divUserList {
+            width: 20%;
+            height: 100%;
+            float: left;
+            display: inline;
+        }
+
+        .ulUserList {
+            list-style: none;
+            margin: 0px;
+            padding: 10px;
+        }
+
+        .ulUserList li {
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .divUserListOpponentUser {
+            width: 100%;
+        }
+
+        .divRoomUserAvatar {
+            width: 50px;
+            height: 50px;
+            float: left;
+            display: inline;
+        }
+
+        .divRoomUserAvatar img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .divRoomUserName {
+            float: left;
+            display: inline;
+            height: 100%;
+            line-height: 50px;
+        }
+
+        #inputForm {
+            height: 90px;
+        }
+
+        .divVideoChatting {
+            position: relative;
+            width: 100%;
+            height: 300px;
+
+            display: none;
+        }
+
+        .divLocalVideo {
+            width: 48%;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        .divRemoteVideo {
+            width: 48%;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .divLocalVideo video{
+            width: 100%;
+        }
+        .divRemoteVideo video{
+            width: 100%;
+        }
+
+
+        /*summernote  style*/
+
+        .note-btn-group.btn-group.note-insert {
+            float: right;
+        }
+
+
+        .m-0-l {
+            margin-left: 0;
+        }
+
+        .m-0-r {
+            margin-right: 0;
+        }
+
+        .emoji-dialog {
+            width: 300px;
+            padding: 10px;
+            position: fixed;
+            left: calc(50% - 150px);
+            top: calc(50% - 150px);
+        }
+
+        .emoji-icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background-size: 24px;
+        }
+
+        .emoji-icon-inline {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+        }
+
+        .emoji-list {
+            height: 200px;
+            overflow-y: scroll;
+        }
+
+        .note-editor.note-frame.panel.panel-default {
+            width: 90%;
+            display: inline;
+            float: left;
+            height: 100%;
+        }
+
+        .note-toolbar.panel-heading {
+            background: transparent;
+            border: none;
+        }
+
+        .note-btn.btn.btn-default.btn-sm {
+            background: none;
+            border: none;
+            box-shadow: none;
+        }
+
+        .note-editor {
+            border-color: transparent!important;
+        }
+        /*=======*/
+
+        #btnSend {
+            width: 10%;
+            height: 100%;
+        }
+        .divMsgEdit {
+            height: 90px;
+        }
+
+
+
+
+
+
+        </style>
+        <link href="summernote/summernote.css" rel="stylesheet">
+        <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+        <style type="text/css">
+        @media (max-width: 768px) {}
+        </style>
+</head>
+
+<body class="divZebera">
+    <% include ./navbar.ejs %>
+    <div class="divMainContainer clearfix fontNormal">
+        <div class="divRoomInfoAndChatList">
+            <div class="divRoomDescription bgMainColor">
+                <span> <%= lang.privatepage_you_started_private_chat_with %> <%= opponentUserName %>  </span>
+            </div>
+            <div class="divChatList bgMainColor">
+                <div class="divVideoChatting">
+                    <div class="divLocalVideo">
+                    </div>
+                    <div class="divRemoteVideo">
+                    </div>
+                </div>
+                <ul class="ulChatList">
+                    <!-- <% for (var i = 0; i < 3; i++) { -%>
+                        <li>
+                            <div class="divChatItem">
+                                <div class="divSenderAvater">
+                                    <img src="/images/avatar/1.png">
+                                </div>
+                                <div class="divChatText">
+                                    <span>
+                                    Hi, This is Abbas. How are you, Ahamed?
+                                </span>
+                                </div>
+                                <div class="divChatTime">
+                                    10:53 AM
+                                </div>
+                            </div>
+                        </li>
+                        <% } -%> -->
+                </ul>
+            </div>
+            <div class="divMsgEdit bgMainColor">
+                <div id="summernote"></div>
+                <button id="btnSend" class="btn colorAccent fontNormal"><%= lang.privatepage_send %></button>
+            </div>
+        </div>
+        <div class="divUserList bgMainColor">
+            <ul class="ulUserList">
+                <li class="clearfix">
+                    <div class="divUserListOpponentUser clearfix">
+                        <div class="divRoomUserAvatar">
+                            <img src="<%= opponentAvatarUrl %>">
+                        </div>
+                        <div class="divRoomUserName">
+                            <span><%= opponentUserName %></span>
+                        </div>
+                    </div>
+                </li>
+                    
+            </ul>
+        </div>
+    </div>
+    <div class="divCover">
+    </div>
+    <iframe id="respTmp" name="respTmp" style="display: none;">
+    </iframe>
+    <!-- below is script -->
+    <% include ./common_script.ejs %>
+    <script src="socket.io-1.2.0.js"></script>
+    <script src="meeting.js"></script>
+
+    <script src="summernote/summernote.js"></script>
+    <script src="summernote-ext-emoji-master/src/summernote-ext-emoji.js"></script>
+    <script type="text/javascript">
+    jQuery(document).ready(function() {
+        document.emojiSource = '/summernote-ext-emoji-master/pngs/';
+        $('#summernote').summernote({
+            toolbar: [
+                // [groupName, [list of button]]
+                ['style', ['bold', 'italic', 'underline']],
+                ['misc', ['emoji']]
+            ],
+            height: 50, // set editor height
+            minHeight: null, // set minimum height of editor
+            maxHeight: null, // set maximum height of editor
+            placeholder: "message",
+            disableResizeEditor: true
+        });
+        $('#summernote').on('summernote.keyup', function(we, e) {
+            if(e.keyCode == 13) {
+                $("#btnSend").click();
+            }
+        });
+    });
+    </script>
+
+
+
+    <script type="text/javascript">
+    var socket = io();
+    var socketId = undefined;
+    socket.on('connect', function() {
+        socketId = socket.io.engine.id;
+        // alert(socketId);
+    })
+    var privateRoomId = "<%= privateRoomId %>";
+
+
+    // moderator options.
+    var isModeratorEnabledText = <%= moderatorOption.is_moderator_text == "YES" ? "true" : "false" %>;
+    var isModeratorEnabledVoice = <%= moderatorOption.is_moderator_voice == "YES" ? "true" : "false" %>;
+    var isModeratorEnabledVideo = <%= moderatorOption.is_moderator_video == "YES" ? "true" : "false" %>;
+
+    var newUserData = {
+        private_room_id: privateRoomId,
+        user_id: <%= userId %>
+    }
+    socket.emit('private_chat_become_online', newUserData);
+
+    socket.on("private_user_online", function(data){
+        if(data.user_id == socket.io.engine.id){
+            //this is me.
+            return;
+        }
+        toastr.success("opponent becomes online ...", "Success");
+        $(".divUserListOpponentUser").attr("user_id", data.user_id);
+    });
+
+    socket.on("joined_private_room_user_list", function(data){
+        // alert(data);
+        toastr.success("opponent becomes online ...", "Success");
+        $(".divUserListOpponentUser").attr("user_id", data.user_id);
+    });
+
+
+    var meeting = new Meeting(privateRoomId);
+
+    // on getting local or remote streams
+    meeting.onaddstream = function(e) {
+        if(e.type == "local"){
+            $(".divLocalVideo").html("");
+            $(".divLocalVideo").append(e.video);
+            if( isModeratorEnabledVideo == false) {
+                $(".divLocalVideo").hide();
+            }
+            if( isModeratorEnabledVoice == false) {
+                $(".divLocalVideo")[0].muted = true;
+            }
+        }else if (e.type == "remote"){
+            $(".divRemoteVideo").html("");
+            $(".divRemoteVideo").append(e.video);
+            if( isModeratorEnabledVideo == false) {
+                $(".divRemoteVideo").hide();
+            }
+            if( isModeratorEnabledVoice == false) {
+                $(".divRemoteVideo")[0].muted = true;
+            }
+        }
+        $(".divVideoChatting").show();
+        $(".ulChatList").height($(".divChatList").height() - $(".divVideoChatting").height());
+
+        //document.body.appendChild(e.video);
+    };
+
+
+    meeting.openSignalingChannel = function(callback) {
+        //console.log("openSignalingChannel");
+        return socket.on('message', callback);
+    };
+
+
+    meeting.onmeeting = function(room) {
+        var room = {
+            userid: room.userid,
+            roomid: room.roomid
+        };
+        meeting.meet(room);
+    };
+
+    socket.on("private_video_chat_check", function(data) {
+        // console.log("private_video_chat_check");
+        // console.log(data);
+        if(data.to_id != socket.io.engine.id){
+            return;
+        }
+        if(data.private_room_id != privateRoomId){
+            return;
+        }
+        meeting.check(privateRoomId);
+    })
+    socket.on("private_user_offline", function(data){
+        toastr.error("<%= lang.privatepage_opponent_goes_offline %>", "<%= lang.privatepage_error %>");
+    })
+
+    socket.on('private_chat', function(data) {
+        // $('#messages').append($('<li>').text(msg));
+
+        console.log(data);
+
+        var msg = data.msg;
+        var avatar_url = data.avatar;
+        var time = data.time;
+
+        var newChatItemHtml = "";
+
+        newChatItemHtml += '<li>';
+        newChatItemHtml += '<div class="divChatItem">';
+        newChatItemHtml += '<div class="divSenderAvater">';
+        newChatItemHtml += '<img src="' + avatar_url + '" >';
+        newChatItemHtml += '</div>';
+        newChatItemHtml += '<div class="divChatText">';
+        newChatItemHtml += '<span>';
+        // newChatItemHtml += 'Hi, This is Abbas. How are you, Ahamed?';
+        newChatItemHtml += msg;
+        newChatItemHtml += '</span>';
+        newChatItemHtml += '</div>';
+        newChatItemHtml += '<div class="divChatTime">';
+        newChatItemHtml += time;
+        newChatItemHtml += '</div>';
+        newChatItemHtml += '</div>';
+        newChatItemHtml += '</li>';
+
+        $(".ulChatList").append(newChatItemHtml);
+
+        $(".ulChatList").scrollTop($(".ulChatList")[0].scrollHeight);
+
+    });
+
+
+
+
+    jQuery(document).ready(function(){
+
+        $("#btnSend").on("click", function() {
+            if(isModeratorEnabledText == false) {
+                toastr.warning("<%= lang.privatepage_not_allowed_text %>", "<%= lang.privatepage_warning %>");
+                return;
+            }
+
+
+            var msg = $('#summernote').summernote('code');
+
+            var isEmpty = $('#summernote').summernote('isEmpty');
+
+            if (isEmpty) {
+                // toastr.warning("Plz enter message...", "Warnning");
+                return;
+            }
+            var data = {
+                msg: msg,
+                userid: socketId,
+                roomid: privateRoomId
+            };
+
+            socket.emit('private_chat', data);
+            $('#summernote').summernote('code', '');
+
+        });
+
+
+        $(".divUserListOpponentUser").on("click", function(){
+            meeting.setup(privateRoomId);
+
+            var toId = $(this).attr("user_id");
+            var setupData = {
+                from_id: socketId,
+                to_id: toId,
+                private_room_id: privateRoomId
+            }
+            socket.emit('private_video_chat_setup', setupData);
+        });
+    });
+    </script>
+</body>
+
+</html>

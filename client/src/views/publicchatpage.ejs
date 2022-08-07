@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>
+		<%= lang.public_chat_page_title %>
+	</title>
+	<% include ./common_meta_styles.ejs %>
+		<style type="text/css">
+		* {
+			/*border-radius: 0 !important;*/
+			cursor: default;
+		}
+
+		button,
+		.btn,
+		.modal-body,
+		.modal-content {
+			border-radius: 0 !important;
+		}
+
+		input[type=checkbox] {
+			transform: scale(1.5);
+		}
+		/***********/
+
+		html,
+		body {
+			height: 100%;
+		}
+
+
+		.modal-content {
+			border: 0px;
+		}
+
+		.modal-header {
+			text-transform: uppercase;
+			text-align: center;
+		}
+
+		.divUpdateButton {
+			background-color: #dfdfdf;
+			text-transform: uppercase;
+			width: 30%;
+		}
+
+		#lblInputAvatarImg {
+			float: left;
+		}
+
+		#userAvatar {
+			width: 100px;
+			height: 100px;
+			float: left;
+		}
+
+
+		
+		/*summernote  style*/
+
+		.note-btn-group.btn-group.note-insert {
+			float: right;
+		}
+
+
+		.m-0-l {
+			margin-left: 0;
+		}
+
+		.m-0-r {
+			margin-right: 0;
+		}
+
+		.emoji-dialog {
+			width: 300px;
+			padding: 10px;
+			position: fixed;
+			left: calc(50% - 150px);
+			top: calc(50% - 150px);
+		}
+
+		.emoji-icon {
+			display: inline-block;
+			width: 24px;
+			height: 24px;
+			background-size: 24px;
+		}
+
+		.emoji-icon-inline {
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+		}
+
+		.emoji-list {
+			height: 200px;
+			overflow-y: scroll;
+		}
+
+		.note-editor.note-frame.panel.panel-default {
+			width: 70%;
+			display: inline;
+			float: left;
+			height: 100%;
+			margin: 0px;
+		}
+
+		.note-toolbar.panel-heading {
+			background: transparent;
+			border: none;
+		}
+
+		.note-btn.btn.btn-default.btn-sm {
+			background: none;
+			border: none;
+			box-shadow: none;
+		}
+
+		.note-editor {
+			border-color: transparent!important;
+		}
+		/*=======*/
+
+		video {
+			width: 200px;
+		}
+		
+
+		/*.divLocalVideo video{
+			width: 100%;
+			height: 100%;
+		}
+		.divRemoteVideo video{
+			margin-right: 20px;
+			width: 25%;
+			height: 100%;
+			display: inline;
+		}*/
+		</style>
+		<style type="text/css">
+		@media (max-width: 768px) {}
+		</style>
+		<link href="summernote/summernote.css" rel="stylesheet">
+		<link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+</head>
+
+<!-- <body class="divZebera"> -->
+<body class="">
+	<% include ./navbar.ejs %>
+	<canvas id="ccc" width="123" height="123" style="width: 100px; height: 100px; background-color: blue; display: none;">
+		</canvas>
+		<div class="divMainContainer clearfix fontNormal">
+			<div class="divRoomInfoAndChatList">
+				<div class="divRoomDescription bgMainColor">
+					<span>ROOM: <%= roomName %></span>
+					<span id = "id_spanRoomDescription"> <%= details %> </span>
+					<button id = "id_buttonQuitPrivateChat" style="display: none;">Back to public</button>
+				</div>
+				<div class="divVideoChatting">
+					<div class="divLocalVideo">
+					</div>
+					<div class="divRemoteVideo clearfix">
+					</div>
+				</div>
+				<div class="divChatList bgMainColor">
+					<ul class="ulChatList">
+						<!-- <% for (var i = 0; i < 3; i++) { -%>
+						<li>
+							<div class="divChatItem">
+								<div class="divSenderAvater">
+									<img src="/images/avatar/1.png">
+								</div>
+								<div class="divChatText">
+									<span>
+									Hi, This is Abbas. How are you, Ahamed?
+								</span>
+								</div>
+								<div class="divChatTime">
+									10:53 AM
+								</div>
+							</div>
+						</li>
+						<% } -%> -->
+					</ul>
+				</div>
+				<div class="divMsgEdit bgMainColor">
+					<div id="summernote"></div>
+					<button id="btnSend" class="btn colorAccent fontNormal">
+						<%= lang.publicpage_send %>
+					</button>
+					<button id="btnToggleMic" class="btn colorAccent fontNormal">MIC
+						<br>ON</button>
+					<button id="btnToggleCam" class="btn colorAccent fontNormal">CAM
+						<br>ON</button>
+					<button id="ttt" class="btn colorAccent fontNormal" style="display: none;">fdsfaewfef</button>
+							
+				</div>
+			</div>
+			<div class="divUserList bgMainColor">
+				<span style="">ONLINE:<span id="spanDescOnlineUserCount" >1</span></span>
+				<% if( typeof isGuest === 'undefined') { -%>
+					<a id="anchorProfile" class="colorAccent" href="#">
+						<%= lang.publicpage_profile %>
+					</a>
+					<% } %>
+						<ul class="ulUserList">
+							<% for (var i = 0; i < 3; i++) { -%>
+								<!-- <li class="clearfix">
+							<div class="divOneRoomUserItem clearfix">
+								<div class="divRoomUsernameAndAvatar">
+									<img src="/images/avatar/2.png">
+									<span>AHAMED</span>
+								</div>
+								<div class="divUserChatControls">
+									<img class="imgText" src="/text.png">
+									<img class="imgVoice" src="/voice.png">
+									<img class="imgVideo" src="/video.png">
+								</div>
+							</div>
+						</li> -->
+								<% } %>
+						</ul>
+			</div>
+		</div>
+		<div class="modal fade" id="modalProfile">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header bgAccentColor colorMain">
+						<label class="modal-title fontNormal labelNormal">
+							<%= lang.publicpage_profile %>
+								</h5>
+						</label>
+					</div>
+					<div class="modal-body text-center">
+						<form class="form-horizontal" method="post" action="/updateprofile" enctype="multipart/form-data" target="respTmp">
+							<div class="form-group">
+								<label for="username" class="col-sm-offset-1 col-sm-3 control-label labelNormal colorAccent">
+									<%= lang.publicpage_username %>
+								</label>
+								<div class="col-sm-7">
+									<input type="text" class="form-control" id="username" name="username">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="password" class="col-sm-offset-1 col-sm-3 control-label labelNormal colorAccent">
+									<%= lang.publicpage_password %>
+								</label>
+								<div class="col-sm-7">
+									<input type="password" class="form-control" id="password" name="password">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="email" class="col-sm-offset-1 col-sm-3 control-label labelNormal colorAccent">
+									<%= lang.publicpage_email %>
+								</label>
+								<div class="col-sm-7">
+									<input type="email" class="form-control" id="email" name="email">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-offset-1 col-sm-3 control-label labelNormal colorAccent" for="inputAvatarImg">
+									<%= lang.publicpage_upload_picture %>
+								</label>
+								<div class="col-sm-7">
+									<input style="display: none;" type="file" id="inputAvatarImg" name="useravatarimage">
+									<label id="lblInputAvatarImg" for="inputAvatarImg">
+										<img id="userAvatar" src="/anonymous.png">
+									</label>
+								</div>
+							</div>
+							<div class="row">
+								<button type="submit" class="btn colorAccent divUpdateButton fontNormal">
+									<%= lang.publicpage_update %>
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="divCover">
+		</div>
+		<iframe id="respTmp" name="respTmp" style="display: none;">
+		</iframe>
+		<a id="linkDynamic" target="_blank" href="#"></a>
+		<!-- below is script -->
+		<% include ./common_script.ejs %>
+		<script src="canvas.js?<%= Math.round(Math.random() * 1000)%>"></script>
+			<script src="socket.io-1.2.0.js"></script>
+			<script src="summernote/summernote.js"></script>
+			<script src="summernote-ext-emoji-master/src/summernote-ext-emoji.js"></script>
+			<script src="meeting.js?<%= Math.round(Math.random() * 1000)%>"></script>
+			<script type="text/javascript">
+			jQuery(document).ready(function() {
+				document.emojiSource = '/summernote-ext-emoji-master/pngs/';
+				$('#summernote').summernote({
+					toolbar: [
+						// [groupName, [list of button]]
+						['style', ['bold', 'italic', 'underline']],
+						['misc', ['emoji']]
+					],
+					height: 50, // set editor height
+					minHeight: null, // set minimum height of editor
+					maxHeight: null, // set maximum height of editor
+					placeholder: "message",
+					disableResizeEditor: true
+				});
+				$('#summernote').on('summernote.keyup', function(we, e) {
+					if (e.keyCode == 13) {
+						$("#btnSend").click();
+					}
+				});
+			});
+			</script>
+			<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				var socket = io();
+
+				var chatLimitCount = 50;
+
+				var isNowPrivateChatting = false;
+				var currentRoomId = <%= roomId %>;
+				var privateChatRoomId = "privateRoom!!";
+				var privateChatOppId = undefined;
+				var meetingRoomId = currentRoomId;
+
+				var isMicOn = false;
+				var isCamOn = false;
+				var meeting = undefined;
+
+				var isModeratorEnabledText = true;
+			    var isModeratorEnabledVoice = true;
+			    var isModeratorEnabledVideo = true;
+
+
+
+			    var isRoomEnabledVoice = <%= roomInfo.is_voice == "YES" ? "true" : "false" %>;
+			    var isRoomEnabledVideo = <%= roomInfo.is_video == "YES" ? "true" : "false" %>;
+
+
+				socket.on('connect', function() {
+					socketId = socket.io.engine.id;
+					refreshControls();
+					// alert(socketId);
+				})
+
+				
+
+				function destroyVideo(videoId) {
+					videoDiv = $("#divVideo_" + videoId);
+					// targVid = $("#" + videoId);
+					// if (targVid.length>0) {
+					// 	console.log(targVid);
+					// 	targVid = targVid[0];
+					// 	// targVid.pause();
+					// 	targVid.src = "";
+					// 	targVid.load();
+					// 	targVid.remove();
+					// 	delete targVid;
+					// 	// alert("deleted");
+					// }
+					videoDiv.remove();
+				}
+
+				function addVideo(target, e) {
+
+
+					destroyVideo(e.userid);
+					var videoDiv = document.createElement('div');
+					$(videoDiv).attr("id", "divVideo_" +e.userid);
+					$(videoDiv).css("width", "200px");
+					$(videoDiv).css("height", "100%");
+					$(videoDiv).css("position", "relative");
+
+					videoDiv.appendChild(e.video);
+
+					var closeButton = document.createElement('button');
+					$(closeButton).text('x');
+					$(closeButton).css("position", "absolute");
+					$(closeButton).css("top", "50%");
+					$(closeButton).css("left", "0px");
+					$(closeButton).css("opacity", ".3");
+					$(closeButton).css("transform", "translateY(-50%)");
+					$(closeButton).hide();
+
+					$(videoDiv).hover(
+						function() {
+							$(closeButton).css("width", $(e.video).width());
+							$(closeButton).css("height", $(e.video).height());
+							$(closeButton).show();
+
+						},
+						function() {
+							$(closeButton).hide();
+						}
+					);
+					
+					closeButton.onclick = function() {
+						destroyVideo(e.userid);
+						this.remove();
+						videoDiv.remove();
+					};
+
+					videoDiv.appendChild(closeButton);
+
+					$(target).append(videoDiv);
+				}
+
+				function initMeeting(){
+					meeting = new Meeting(meetingRoomId);
+
+					// on getting local or remote streams
+					meeting.onaddstream = function(e) {
+						if(("" + e.userid).substring(0, 3) == "can"){
+							console.log("fake~~~~");
+							return;
+						}
+						console.log("onaddstream " + e.type);
+						console.log(e);
+						if (e.video == undefined) {
+							return;
+						}
+						if (e.type == "local") {
+							pE = e;
+							// e.video.onloadedmetadata = function(e){
+							// 	console.log("local  ==============================>" + this.videoWidth + ", " + this.videoHeight);
+							// 	if(this.videoWidth != 123 && this.videoHeight != 123 ){
+							// 		console.log(pE);
+									addVideo(".divLocalVideo", pE);
+							// 	}
+							// }
+						} else if (e.type == "remote") {
+							pR = e;
+							// e.video.onloadedmetadata = function(){
+							// 	console.log("remote ==============================>" + this.videoWidth + ", " + this.videoHeight);
+							// 	if(this.videoWidth != 123 && this.videoHeight != 123 ){
+							// 		console.log(pR);
+									addVideo(".divRemoteVideo", pR);
+							// 	 }
+							// };
+						}
+						// $(".divVideoChatting").show();
+						// $(".divVideoChatting").height(Math.max($(".divLocalVideo").height(), $(".divRemoteVideo").height()));
+						// $(".ulChatList").height($(".divChatList").height() - $(".divVideoChatting").height());
+					};
+
+					meeting.openSignalingChannel = function(callback) {
+						//console.log("openSignalingChannel");
+						return socket.on('message', callback);
+					};
+
+					meeting.check(meetingRoomId);
+
+
+					meeting.onuserleft = function(userid) {
+						console.log("user left user_id: " + userid);
+						destroyVideo(userid);
+						
+					};
+
+					meeting.onmeeting = function(room) {
+						console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
+						var room = {
+							userid: room.userid,
+							roomid: meetingRoomId
+						};
+						meeting.meet(room);
+					};
+					console.log("meeting setup with id: " + meetingRoomId);
+				}
+
+				function refreshControls() {
+					constraints.audio = isMicOn;
+					constraints.video = isCamOn;
+					if(meeting == undefined){
+						initMeeting();
+						meeting.setup(meetingRoomId);
+					}else {
+						destroyVideo("self");
+						meeting.leave();
+						initMeeting();
+						meeting.setup(meetingRoomId);
+					}
+					
+					// if (meeting == undefined) {
+					// 	initMeeting();
+					// }
+					
+					// console.log("creating new Meeting with roomId " + meetingRoomId);
+					// console.log(meeting);
+					// if (!constraints.audio && !constraints.video) {
+					// 	destroyVideo("self");
+					// 	meeting.leave();
+					// 	initMeeting();
+					// 	//meeting.resetStream();
+					// }
+					// meeting.setup(meetingRoomId);
+
+				}
+
+
+
+
+				var append2UserList = function(userSocketId, avatar, username) {
+					// var newUserItemHtml = "";
+					// newUserItemHtml +=	'<li class="clearfix" user_socket_id=' + userSocketId + '>' +
+					// 					'	<div class="divOneRoomUserItem clearfix">' +
+					// 					'		<div class="divRoomUsernameAndAvatar">' +
+					// 					'			<img src="' + avatar + '">' +
+					// 					'			<span>' + username + '</span>' +
+					// 					'		</div>';
+					// <% if( typeof isGuest === 'undefined') { -%>
+					// newUserItemHtml +=	'		<a href="#" class="anchorPrivateChat" user_socket_id = ' + userSocketId + '>' + 'private chat' + '</a>';
+					// <% } %>
+					// <% if (isModerator) { -%>
+					// newUserItemHtml +=	'		<div class="divUserChatControls">' +
+					// 					'			<img class="imgText" src="/text.png">' +
+					// 					'			<img class="imgVoice" src="/voice.png">' +
+					// 					'			<img class="imgVideo" src="/video.png">' +
+					// 					'			<a class="anchorKick" href="#">Kick</a>' +
+					// 					'			<a class="anchorBan" href="#">Ban</a>' +
+					// 					'		</div>';
+					// <% } %>
+
+					// newUserItemHtml +=	'		<div class="divUserChatStatus">' +
+					// 					'		</div>' +
+					// 					'	</div>' +
+					// 					'</li>';
+
+
+
+
+					var newUserItemHtml = "";
+					newUserItemHtml +=	'<li class="clearfix" user_socket_id=' + userSocketId + '>' +
+										'	<div class="divOneRoomUserItem clearfix">' +
+										'		<div class="divRoomUserAvatar">' +
+										'			<img src="' + avatar + '">' +
+										'		</div>' +
+										'		<div class="divRoomUserInformation">' +
+										'			<div class="divRoomUserName clearfix">' +
+										'				<span>' + username + '</span>' +
+										'				<div class="divUserChatStatus">' +
+										'				</div>' +
+										'			</div>' ;
+					newUserItemHtml +=	'			<div class="divPrivateChatLink clearfix">' +
+										'				<a href="#" class="anchorPrivateChat" user_socket_id = ' + userSocketId + '>' + 'private chat' + '</a>' +
+										'			</div>';
+					<% if (isModerator) { -%>
+					newUserItemHtml +=	'			<div class="divUserChatControls">' +
+										'				<img class="imgText" src="/text.png">' +
+										'				<img class="imgVoice" src="/voice.png">' +
+										'				<img class="imgVideo" src="/video.png">' +
+										'				<a class="anchorKick" href="#">Kick</a>' +
+										'				<a class="anchorBan" href="#">Ban</a>' +
+										'			</div>';
+					<% } %>
+
+					newUserItemHtml +=	'		</div>' +
+										'	</div>' +
+										'</li>';
+
+
+					$(".ulUserList").append(newUserItemHtml);
+
+					$("#spanDescOnlineUserCount").text($('ul.ulUserList li').length);
+
+
+					$("a[user_socket_id=" + userSocketId + "]").off("click").on("click", function() {
+						userSocketId = $(this).attr("user_socket_id");
+						if (userSocketId == socketId) {
+							toastr.warning("<%= lang.publicpage_cant_call_by_yourself %>", "Warnning");
+							return;
+						}
+						if( isNowPrivateChatting ){
+							toastr.warning("<%= lang.plz_go_back_to_public_page_to_start_new_private_chat %>", "Warnning");
+							return;
+						}
+						//console.log(userSocketId);
+
+						// here, need to send call request to user via server.
+
+						var privateChatRequestData = {
+							from_id: socketId,
+							to_id: userSocketId
+						}
+
+						socket.emit('private_chat_request', privateChatRequestData);
+
+						// shows waiting 
+						$(".divCover").addClass('csspinner load1');
+
+					});
+
+
+					<% if (isModerator) { -%>
+					$("li[user_socket_id=" + userSocketId + "] img.imgText").off("click").on("click", function() {
+						userSocketId = $(this).closest("li").attr("user_socket_id");
+						//console.log(userSocketId);
+
+
+						// here, need to send call request to user via server.
+
+						var micRequestData = {
+							from_id: socketId,
+							to_id: userSocketId
+						}
+
+						if ($(this).hasClass("disabled")) {
+							socket.emit('enable_text_request', micRequestData);
+						} else {
+							socket.emit('disable_text_request', micRequestData);
+						}
+
+						// // shows waiting 
+						// $(".divCover").addClass('csspinner load1');
+
+					});
+
+					$("li[user_socket_id=" + userSocketId + "] img.imgVoice").off("click").on("click", function() {
+						userSocketId = $(this).closest("li").attr("user_socket_id");
+						//console.log(userSocketId);
+
+
+						// here, need to send call request to user via server.
+
+						var micRequestData = {
+							from_id: socketId,
+							to_id: userSocketId
+						}
+
+						if ($(this).hasClass("disabled")) {
+							socket.emit('enable_mic_request', micRequestData);
+						} else {
+							socket.emit('disable_mic_request', micRequestData);
+						}
+
+						// // shows waiting 
+						// $(".divCover").addClass('csspinner load1');
+
+					});
+
+					$("li[user_socket_id=" + userSocketId + "] img.imgVideo").off("click").on("click", function() {
+						userSocketId = $(this).closest("li").attr("user_socket_id");
+						//console.log(userSocketId);
+
+
+						// here, need to send call request to user via server.
+
+						var micRequestData = {
+							from_id: socketId,
+							to_id: userSocketId
+						}
+
+						if ($(this).hasClass("disabled")) {
+							socket.emit('enable_video_request', micRequestData);
+						} else {
+							socket.emit('disable_video_request', micRequestData);
+						}
+
+						// // shows waiting 
+						// $(".divCover").addClass('csspinner load1');
+
+					});
+
+					$("li[user_socket_id=" + userSocketId + "] a.anchorKick").off("click").on("click", function() {
+						userSocketId = $(this).closest("li").attr("user_socket_id");
+						//console.log(userSocketId);
+
+
+						// here, need to send call request to user via server.
+
+						var userKickData = {
+							from_id: socketId,
+							to_id: userSocketId
+						}
+						socket.emit('kick_user_request', userKickData);
+
+						// // shows waiting 
+						// $(".divCover").addClass('csspinner load1');
+
+					});
+
+					$("li[user_socket_id=" + userSocketId + "] a.anchorBan").off("click").on("click", function() {
+						userSocketId = $(this).closest("li").attr("user_socket_id");
+						//console.log(userSocketId);
+
+
+						// here, need to send call request to user via server.
+
+						var banRequestData = {
+							from_id: socketId,
+							to_id: userSocketId
+						}
+
+						if ($(this).hasClass("banned")) {
+							socket.emit('unban_user_request', banRequestData);
+						} else {
+							socket.emit('ban_user_request', banRequestData);
+						}
+
+						// // shows waiting 
+						// $(".divCover").addClass('csspinner load1');
+
+					});
+
+
+					<% } %>
+				}
+
+				$(function() {
+
+
+					// var newUserData = {
+					// 	room_id: "<%= roomId %>",
+					// 	user_id: 0
+					// }
+					// socket.emit('public_become_online', newUserData);
+
+
+					var newUserData = {
+						room_id: "<%= roomId %>",
+						user_id: "<%= userId %>",
+						<% if( typeof isGuest !== 'undefined') { -%>
+							guest_name_id: "<%= guestNameId %>"
+						<% } %>
+					}
+					socket.emit('public_become_online', newUserData);
+
+					//socket.join("<%=roomId%>");
+
+					$("#btnSend").on("click", function() {
+						if ( !isModeratorEnabledText ) {
+							toastr.warning("Moderator disabled you from text chat...", "Warnning");
+							return;
+						}
+					    
+						var msg = $('#summernote').summernote('code');
+
+						var isEmpty = $('#summernote').summernote('isEmpty');
+
+						if (isEmpty) {
+							// toastr.warning("Plz enter message...", "Warnning");
+							return;
+						}
+						
+
+						if(!isNowPrivateChatting){
+							var data = {
+								msg: msg,
+								userid: socketId,
+								roomid: "<%= roomId %>"
+							};
+							socket.emit('public_chat', data);
+						} else {
+							var data = {
+								msg: msg,
+								userid: socketId,
+								toid: privateChatOppId,
+								roomid: privateChatRoomId
+							};
+							socket.emit('private_chat', data);
+						}
+
+						
+						$('#summernote').summernote('code', '');
+
+					});
+
+					// user mic change 
+					var micToggleInfo = {
+							user_id: socketId,
+							room_id: currentRoomId,
+							mic_status: isMicOn
+						}
+					socket.on('mic_toggled', function (data){
+						micUserId = data.user_id;
+						micStatus = data.mic_status;
+						if(micStatus) {
+							if($("li[user_socket_id=" + micUserId + "] div.divUserChatStatus img.imgVoice").length > 0){
+								return;
+							}
+							var imgHasMic = document.createElement('img');
+							$(imgHasMic).attr("src", "/voice.png");
+							$(imgHasMic).addClass("imgVoice");
+							$("li[user_socket_id=" + micUserId + "] div.divUserChatStatus").append(imgHasMic);
+						} else {
+							$("li[user_socket_id=" + micUserId + "] div.divUserChatStatus img.imgVoice").remove();
+						}
+
+					});
+
+					socket.on("navbar_info_change", function(data) {
+						navbarInfo = data;
+						$("#id_spanNavbarActiveRoomsCount").text(navbarInfo.activateRoomCount);
+						$("#id_spanNavbarAllRoomsCount").text(navbarInfo.allRoomCount);
+						$("#id_spanNavbarOnlineUsersCount").text(navbarInfo.onlineUserCount);
+
+						// var ulActiveRoomDropDownHtml = "";
+
+				  //   	for( i = 0; i< navbarInfo.activateRoomLinks.length; i++)  {
+				  //   		ulActiveRoomDropDownHtml +=	'<li>' +
+				  //   									'<a href="' + navbarInfo.activateRoomLinks[i].room_url + '">' +
+				  //   									navbarInfo.roomInfoArray[navbarInfo.activateRoomLinks[i].room_id].room_name+
+				  //   									'</a>' +
+				  //   									'</li>';
+				  //   	}
+				  //   	$("#id_ulActiveRoomDropDown").html(ulActiveRoomDropDownHtml);
+
+				  //   	var ulWholeRoomDropDownHtml = "";
+
+				  //   	for( var i in navbarInfo.roomInfoArray)  {
+				  //   		ulWholeRoomDropDownHtml +=	'<li>' + 
+				  //   									'<a href="' + navbarInfo.roomInfoArray[i].room_url + '">' +
+				  //   									navbarInfo.roomInfoArray[i].room_name+
+				  //   									'</a>' +
+				  //   									'</li>';
+				  //   	}
+				  //   	$("#id_ulWholeRoomDropDown").html(ulWholeRoomDropDownHtml);
+
+					});
+
+					<% if (isModerator) { -%>
+
+					// text moderator settings.
+					socket.on("disabled_text_user", function(data) {
+						var userSocketId = data.user_id;
+						toastr.success(data.msg, 'Success');
+						$("li[user_socket_id=" + userSocketId + "] img.imgText").addClass("disabled");
+						$("li[user_socket_id=" + userSocketId + "] img.imgText").attr("src", "/text_disabled.png");
+					});
+					socket.on("enabled_text_user", function(data) {
+						var userSocketId = data.user_id;
+						toastr.success(data.msg, 'Success');
+						$("li[user_socket_id=" + userSocketId + "] img.imgText").removeClass("disabled");
+						$("li[user_socket_id=" + userSocketId + "] img.imgText").attr("src", "/text.png");
+					});
+					// voice moderator settings.
+					socket.on("disabled_mic_user", function(data) {
+						var userSocketId = data.user_id;
+						toastr.success(data.msg, 'Success');
+						$("li[user_socket_id=" + userSocketId + "] img.imgVoice").addClass("disabled");
+						$("li[user_socket_id=" + userSocketId + "] img.imgVoice").attr("src", "/voice_disabled.png");
+					});
+					socket.on("enabled_mic_user", function(data) {
+						var userSocketId = data.user_id;
+						toastr.success(data.msg, 'Success');
+						$("li[user_socket_id=" + userSocketId + "] img.imgVoice").removeClass("disabled");
+						$("li[user_socket_id=" + userSocketId + "] img.imgVoice").attr("src", "/voice.png");
+					});
+					// video moderator settings.
+					socket.on("disabled_video_user", function(data) {
+						var userSocketId = data.user_id;
+						toastr.success(data.msg, 'Success');
+						$("li[user_socket_id=" + userSocketId + "] img.imgVideo").addClass("disabled");
+						$("li[user_socket_id=" + userSocketId + "] img.imgVideo").attr("src", "/video_disabled.png");
+					});
+					socket.on("enabled_video_user", function(data) {
+						var userSocketId = data.user_id;
+						toastr.success(data.msg, 'Success');
+						$("li[user_socket_id=" + userSocketId + "] img.imgVideo").removeClass("disabled");
+						$("li[user_socket_id=" + userSocketId + "] img.imgVideo").attr("src", "/video.png");
+					});
+
+					// ban/unban moderator settings.
+					socket.on("banned_user", function(data) {
+						var userSocketId = data.user_id;
+						toastr.success(data.msg, 'Success');
+						$("li[user_socket_id=" + userSocketId + "] a.anchorBan").addClass("banned");
+						$("li[user_socket_id=" + userSocketId + "] a.anchorBan").css("text-decoration", "line-through");
+					});
+					socket.on("unbanned_user", function(data) {
+						var userSocketId = data.user_id;
+						toastr.success(data.msg, 'Success');
+						$("li[user_socket_id=" + userSocketId + "] a.anchorBan").removeClass("banned");
+						$("li[user_socket_id=" + userSocketId + "] a.anchorBan").css("text-decoration", "none");
+					});
+
+					<% } %>
+
+
+					//==================================
+					// text settings.
+					socket.on("disabled_text_from_moderator", function(data) {
+						isModeratorEnabledText = false;
+						swal({
+							title: "<%= lang.publicpage_moderator_command %>",
+							text: data.msg,
+							type: 'error',
+							allowOutsideClick: false
+						});
+					});
+					socket.on("enabled_text_from_moderator", function(data) {
+						isModeratorEnabledText = true;
+						swal({
+							title: "<%= lang.publicpage_moderator_command %>",
+							text: data.msg,
+							type: 'success',
+							allowOutsideClick: false
+						});
+					});
+					// voice settings.
+					socket.on("disabled_mic_from_moderator", function(data) {
+					    isModeratorEnabledVoice = false;
+						swal({
+							title: "<%= lang.publicpage_moderator_command %>",
+							text: data.msg,
+							type: 'error',
+							allowOutsideClick: false
+						});
+					});
+					socket.on("enabled_mic_from_moderator", function(data) {
+					    isModeratorEnabledVoice = true;
+						swal({
+							title: "<%= lang.publicpage_moderator_command %>",
+							text: data.msg,
+							type: 'success',
+							allowOutsideClick: false
+						});
+					});
+					// video settings.
+					socket.on("disabled_video_from_moderator", function(data) {
+					    isModeratorEnabledVideo = false;
+						swal({
+							title: "<%= lang.publicpage_moderator_command %>",
+							text: data.msg,
+							type: 'error',
+							allowOutsideClick: false
+						});
+					});
+					socket.on("enabled_video_from_moderator", function(data) {
+			    		isModeratorEnabledVideo = true;
+						swal({
+							title: "<%= lang.publicpage_moderator_command %>",
+							text: data.msg,
+							type: 'success',
+							allowOutsideClick: false
+						});
+					});
+					//==================================
+
+					//kicked
+					socket.on("kicked", function(data) {
+						toastr.warning(data.msg, "<%= lang.publicpage_warning %>");
+						setTimeout(() => { window.location.href = data.url; }, 1000);
+					});
+					//banned
+					socket.on("banned", function(data) {
+						toastr.warning(data.msg, "<%= lang.publicpage_warning %>");
+						setTimeout(() => { window.location.href = data.url; }, 1000);
+					});
+
+					socket.on("start_call", function(data) {
+						$(".divCover").removeClass('csspinner load1');
+						console.log("start_call event.");
+						console.log(data);
+
+						privateChatRoomId = data.private_room_url;
+						meetingRoomId = privateChatRoomId;
+
+						isNowPrivateChatting = true;
+						privateChatOppId = data.opp_id;
+						$("#id_spanRoomDescription").text("Private chat started.");
+						$("#id_buttonQuitPrivateChat").show();
+
+						$(".divLocalVideo").empty();
+						$(".divRemoteVideo").empty();
+						isMicOn = false;
+						isCamOn = false;
+						$("#btnToggleMic").html("MIC<br>ON");
+						$("#btnToggleCam").html("CAM<br>ON");
+						refreshControls();
+						
+						// $(".ulChatList").empty();
+
+						// var win = window.open(url, '_blank');
+						// win.focus();
+
+						//OpenNewTab(url);
+
+						//var url = data.url;
+
+					});
+
+					socket.on("call_rejected", function(data) {
+						$(".divCover").removeClass('csspinner load1');
+						if (data.from_id == socket.io.engine.id) {
+							toastr.error(data.msg, "<%= lang.publicpage_error %>");
+						}
+					});
+
+					socket.on("incoming_private_chat_request", function(data) {
+						var fromId = data.from_id;
+						var toId = data.to_id;
+
+						// shows incoming_call alert
+						swal({
+							title: "<%= lang.publicpage_incoming_request %>",
+							text: "<%= lang.publicpage_user_want_private_chat %>" + "(" + fromId + ")",
+							type: 'info',
+							showCancelButton: true,
+							confirmButtonText: '<%= lang.publicpage_accept %>',
+							cancelButtonText: '<%= lang.publicpage_reject %>',
+							allowOutsideClick: false
+						}).then(function() {
+							// send info server about accept.
+							socket.emit('accept_call', data);
+							$(".divCover").addClass('csspinner load1');
+						}, function(dismiss) {
+							// dismiss can be 'cancel', 'overlay',
+							// 'close', and 'timer'
+							if (dismiss === 'cancel') {
+								// send info to server about reject.
+								console.log("reject~!!!!!!!");
+								socket.emit('reject_call', data);
+							}
+						})
+
+
+					});
+
+					socket.on("joined_public_room_user_list", function(data) {
+						console.log("joined_public_room_user_list");
+						console.log(data);
+						for (i = 0; i < data.length; i++) {
+
+							//console.log(data[i]);
+							$("li[user_socket_id=" + data[i].user_id + "]").remove();
+
+							append2UserList(data[i].user_id, data[i].avatar, data[i].username);
+						}
+					});
+
+					socket.on("public_new_user_online", function(data) {
+						console.log("public_new_user_online");
+						console.log(data);
+						var userSocketId = data.user_id;
+						var avatar = data.avatar;
+						var username = data.username;
+
+						// if (userSocketId == socket.io.engine.id) {
+						// 	return;
+						// }
+
+						$("li[user_socket_id=" + userSocketId + "]").remove();
+
+						append2UserList(userSocketId, avatar, username);
+
+
+					});
+					socket.on("public_user_offline", function(data) {
+						console.log("public user goes offline");
+						console.log(data);
+						var userId = data.user_id;
+
+						$("li[user_socket_id=" + userId + "]").remove();
+						$("#spanDescOnlineUserCount").text($('ul.ulUserList li').length);
+						destroyVideo(userId);
+
+						//alert("a user disconnect");
+
+					});
+
+					function addChatList(avatarUrl, msg, time) {
+						var newChatItemHtml = "";
+
+						newChatItemHtml += '<li>';
+						newChatItemHtml += '<div class="divChatItem">';
+						newChatItemHtml += '<div class="divSenderAvater">';
+						newChatItemHtml += '<img src="' + avatarUrl + '" >';
+						newChatItemHtml += '</div>';
+						newChatItemHtml += '<div class="divChatText">';
+						newChatItemHtml += '<span>';
+						// newChatItemHtml += 'Hi, This is Abbas. How are you, Ahamed?';
+						newChatItemHtml += msg;
+						newChatItemHtml += '</span>';
+						newChatItemHtml += '</div>';
+						newChatItemHtml += '<div class="divChatTime">';
+						newChatItemHtml += time;
+						newChatItemHtml += '</div>';
+						newChatItemHtml += '</div>';
+						newChatItemHtml += '</li>';
+
+						if ($('ul.ulChatList li').length >= chatLimitCount) {
+							$("ul.ulChatList > :first-child").remove();
+						}
+
+						$(".ulChatList").append(newChatItemHtml);
+
+						$(".ulChatList").scrollTop($(".ulChatList")[0].scrollHeight);
+					}
+
+					socket.on('public_chat', function(data) {
+						// $('#messages').append($('<li>').text(msg));
+
+						//console.log(data);
+						if(!isNowPrivateChatting) {
+							addChatList(data.avatar, data.msg, data.time);
+						}
+
+					});
+
+					socket.on('private_chat', function(data) {
+						console.log("private_chat");
+						console.log(data);
+						// $('#messages').append($('<li>').text(msg));
+
+						//console.log(data);
+						addChatList(data.avatar, data.msg, data.time);
+						
+
+					});
+
+
+				});
+
+
+
+
+				// this script for placing modal box at the center of screen.
+				$(function() {
+					function reposition() {
+						var modal = $(this),
+							dialog = modal.find('.modal-dialog');
+						modal.css('display', 'block');
+
+						// Dividing by two centers the modal exactly, but dividing by three 
+						// or four works better for larger screens.
+						dialog.css("margin-top", Math.max(0, ($(window).height() - dialog.height()) / 2));
+					}
+					// Reposition when a modal is shown
+					$('.modal').on('show.bs.modal', reposition);
+					// Reposition when the window is resized
+					$(window).on('resize', function() {
+						$('.modal:visible').each(reposition);
+					});
+				});
+
+				// avater image event handler on profile modal
+				$("#inputAvatarImg").change(function() {
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						$("#userAvatar").attr("src", e.target.result);
+					}
+					reader.readAsDataURL($(this)[0].files[0]);
+					// console.log($(this)[0].files[0]);
+				});
+
+				$("#anchorProfile").on("click", function() {
+					$('#modalProfile').modal('show');
+				});
+
+				// after form post.
+				$("#respTmp").on("load", function() {
+					//$(".divCover").removeClass('csspinner load1');
+					var ret = $(this).contents().find("body").text();
+
+					ret = JSON.parse(ret);
+
+					// console.log(ret);
+
+					if (ret.status == "fail") {
+						if (ret.type == "needlogin") {
+							toastr.error(ret.msg, "<%= lang.publicpage_error %>");
+							var url = data;
+							window.location.href = url;
+							return;
+						}
+						if (ret.type == "needtologin") {
+							toastr.error(ret.msg, "<%= lang.frontpage_error %>");
+							return;
+						}
+
+						toastr.error(ret.msg, "<%= lang.publicpage_error %>");
+						return;
+					}
+
+
+					if (ret.status == "ok") {
+						if (ret.type == "updateprofile") {
+							toastr.success(ret.msg, '<%= lang.publicpage_success %>');
+							$('#modalProfile').modal('hide');
+							return;
+						}
+						if(ret.type == "showcreateroom"){
+							window.location.href = ret.data;
+							return;
+						}
+					}
+				});
+
+
+				$("#btnToggleMic").on("click", function() {
+					if (isMicOn == false) {
+
+						if ( !isModeratorEnabledVoice) {
+							toastr.warning("Moderator disabled you from voice chat...", "Warnning");
+							return;
+						}
+						if ( !isRoomEnabledVoice) {
+							toastr.warning("You are not allowed to use mic in this room", "Warnning");
+							return;
+						}
+
+
+
+						isMicOn = true;
+						$(this).html("MIC<br>OFF");
+					} else {
+						isMicOn = false;
+						$(this).html("MIC<br>ON");
+					}
+
+					if (!isNowPrivateChatting){
+						var micToggleInfo = {
+							user_id: socketId,
+							room_id: currentRoomId,
+							mic_status: isMicOn
+						}
+						socket.emit('mic_toggled', micToggleInfo);
+					}
+
+					refreshControls();
+				});
+
+				$("#btnToggleCam").on("click", function() {
+					if (isCamOn == false) {
+						if ( !isModeratorEnabledVideo) {
+							toastr.warning("Moderator disabled you from video chat...", "Warnning");
+							return;
+						}
+
+						if ( !isRoomEnabledVideo) {
+							toastr.warning("You are not allowed to use cam in this room", "Warnning");
+							return;
+						}
+
+						//isCamOn = true;
+						isCamOn = {
+							mandatory: {
+								maxWidth: 200,
+								maxHeight: 150
+							}
+						}
+						$(this).html("CAM<br>OFF");
+					} else {
+						isCamOn = false;
+						$(this).html("CAM<br>ON");
+					}
+					refreshControls();
+				});
+
+				$("#id_buttonQuitPrivateChat").on("click", function(){
+					$("#id_spanRoomDescription").text("<%= details %>");
+					$("#id_buttonQuitPrivateChat").hide();
+					isNowPrivateChatting = false;
+				});
+
+				// setTimeout(function(){
+				// 	$("#btnToggleMic").click();
+				// 	setTimeout(function(){
+				// 		$("#btnToggleMic").click();
+				// 	}, 500);
+				// }, 500);
+
+
+				//offerAnswerConstraints.mandatory.OfferToReceiveVideo = false;
+				//constraints.video = false;
+				window.onbeforeunload = function() {
+					if(meeting != undefined){
+						meeting.leave();
+					}
+					return undefined;
+				}
+
+				$("#ttt").on("click",function(){
+					meeting.leave();
+				});
+			});
+
+			
+			// $(window).unload(function(){
+			//   	meeting.leave();
+			// });
+			</script>
+</body>
+
+</html>

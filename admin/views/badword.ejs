@@ -1,0 +1,194 @@
+<!doctype html>
+<html>
+<head>
+    <% include ./header %>
+</head>
+<body class="bs-docs-home">
+    <% include ./navbar %>
+    <div>
+        <div class="container-fluid text-center" style="margin-top: 3%">
+            <h1><%= lang.bad_word_manager%></h1>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-1">
+                    <button id="btnBadWordAdd" class="btn btn-danger" style="float:right;height: 40px; width: 60px"><span class="fa fa-plus"></span></button>
+                </div>
+                <div class="col-sm-1" style="float:right;">
+                    <a class="btn btn-danger" href="/dashboard" style="float:left;height: 40px; width: 60px"><i class="material-icons">&#xe5d9;</i></a>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <tr>
+                        <th width="3%">No</th>
+                        <th>Bad Word</th>
+                        <th width="100px">Action</th>
+                    </tr>
+                    <% for(var i = 0; i < bad_word.length; i++) { %>
+                        <tr>
+                            <td><%= i + 1%></td>
+                            <td id="table_bad_word_id_<%=i + 1 %>" style="display: none"><%=bad_word[i]['id'] %></td>
+                            <td id="table_bad_word_content_<%=i + 1 %>"><%=bad_word[i]['bad_word']%></td>
+                            <td>
+                                <div style="display: inline">
+                                    <button id="btnBadWordEdit_<%=i + 1 %>" name="edit" class="btn btn-warning"><i class="fa fa-pencil"></i></button>
+                                    <button id="btnBadWordDelete_<%=i + 1 %>" name="delete" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    <% } %>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal_bad_word" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 id="text_modal_title" class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-sm-3 col-sm-offset-1 text-center">
+                            <p>Bad Word</p>
+                        </div>
+                        <div class="col-sm-7">
+                            <input type="text" name="bad_word_id" id="text_bad_word_id" style="display: none;">
+                            <input type="text" name="bad_word_content" id="text_bad_word_content" style="width: 100%;">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-o btn-sm" data-dismiss="modal"><%=lang.close %></button>
+                    <button type="button" id="btnSaveBadWord" class="btn btn-info btn-o btn-sm" data-dismiss="modal"><%=lang.save %></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+<script>
+
+    jQuery(document).ready(function() {
+
+        $('button[name = edit]').on('click', function () {
+
+            $('#text_modal_title').text('Bad Word Edit');
+
+            id = $(this)[0]['id'];
+            index = id.split('_')[1];
+
+            $('#text_bad_word_content').val($('#table_bad_word_content_' + index).text());
+            $('#text_bad_word_id').val($('#table_bad_word_id_' + index).text());
+
+            $('#modal_bad_word').modal();
+
+        });
+
+        $('button[name = delete]').on('click', function () {
+
+            id = $(this)[0]['id'];
+            index = id.split('_')[1];
+            id = $('#table_bad_word_id_' + index).text();
+
+            swal({
+                    title: "Are you sure?",
+                    text: "You will not be able to recover this this bad word!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "No, cancel!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function(isConfirm) {
+                    if (isConfirm) {
+
+                        $.ajax({
+                            url: '/delete_bad_word',
+                            data: {
+                                id: id
+                            },
+                            method: 'post',
+                            success: function (resp) {
+                                if (resp.type == 'success'){
+                                    window.location.reload();
+                                } else {
+                                    toastr.error(resp.msg);
+                                }
+                            }
+                        });
+
+                    } else {
+                        window.location.reload();
+                    }
+                }
+            );
+        });
+
+        $('#btnBadWordAdd').on('click', function () {
+
+            $('#text_modal_title').text('Bad Word Add');
+
+            id = $(this)[0]['id'];
+            index = id.split('_')[1];
+
+            $('#text_bad_word_content').val('');
+            $('#text_bad_word_id').val('');
+
+            $('#modal_bad_word').modal();
+        })
+        
+        $('#btnSaveBadWord').on('click', function () {
+
+            id = $('#text_bad_word_id').val();
+            bad_wrod = $('#text_bad_word_content').val();
+
+            if (id == ''){
+                $.ajax({
+                    url: '/add_bad_word_content',
+                    data: {
+                        bad_word: bad_wrod
+                    },
+                    method: 'post',
+                    success: function (resp) {
+                        if (resp.type == 'success'){
+                            window.location.reload();
+                        } else {
+                            toastr.error(resp.msg);
+                        }
+                    }
+                });
+
+            } else {
+                $.ajax({
+                    url: '/change_bad_word_content',
+                    data: {
+                        id: id,
+                        bad_word: bad_wrod
+                    },
+                    method: 'post',
+                    success: function (resp) {
+                        if (resp.type == 'success'){
+                            window.location.reload();
+                        } else {
+                            toastr.error(resp.msg);
+                        }
+                    }
+                });
+            }
+
+
+        })
+
+    });
+
+</script>

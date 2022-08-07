@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+	<% include ./header %>
+	<style>
+		* {
+			border-radius: 0 !important;
+		}
+	</style>
+</head>
+<body class="bs-docs-home">
+	<% include ./navbar %>
+	<div>
+		<div class="container-fluid text-center main-header">
+			<h1><%= lang.welcome_admin_panel%></h1>
+		</div>
+		<div class="container" >
+			<div class="row">
+				<a href="/rooms">
+					<button class="col-sm-2 col-sm-offset-2 col-xs-6 col-xs-offset-3 btn btn-warning main-menu">
+						<%= lang.rooms%>
+					</button>
+				</a>
+				<a href="/theme">
+					<button class="col-sm-2 col-sm-offset-1 col-xs-6 col-xs-offset-3  btn btn-warning main-menu">
+						<%= lang.theme%>
+					</button>
+				</a>
+				<a href="/users">
+					<button class="col-sm-2 col-sm-offset-1 col-xs-6 col-xs-offset-3 btn btn-warning main-menu">
+						<%= lang.users%>
+					</button>
+				</a>
+			</div>
+			<div class="row" style="margin-top: 5%">
+				<a href="/language">
+					<button class="col-sm-2 col-sm-offset-2 col-xs-6 col-xs-offset-3 btn btn-warning main-menu">
+						<%= lang.language%>
+					</button>
+				</a>
+				<a href="/settings">
+					<button class="col-sm-2 col-sm-offset-1 col-xs-6 col-xs-offset-3 btn btn-warning main-menu">
+						<%= lang.setting%>
+					</button>
+				</a>
+				<a href="/bad_word">
+					<button class="col-sm-2 col-sm-offset-1 col-xs-6 col-xs-offset-3 btn btn-warning main-menu">
+						<%= lang.bad_word%> <br> <%= lang.filters%>
+					</button>
+				</a>
+			</div>
+		</div>
+	</div>
+</body>
