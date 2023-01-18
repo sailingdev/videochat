@@ -7,7 +7,7 @@
         <div class="blog-posts single-post">
             <article class="post post-large blog-single-post">
                 <div class="row center">
-                    <a type="button" class="btn btn-default pull-left" style="margin-top: 20px;" onclick="window.close()">닫 기</a>
+                    <a type="button" class="btn btn-default pull-left" style="margin-top: 20px;" onclick="window.close()">close</a>
                     <h3 style="color: #0088cc">{{$obj['innerTitle']}}</h3>
                     <div class="row" style="height: 1px; background: #000000; margin: 10px 0 0px 0;"></div>
                     <div class="post-meta pull-right" style="margin: 10px 0 10px 0; color: #adadad;">
@@ -121,7 +121,7 @@
                                 <div class="row">
                                     <div class="col-md-12 text-right">
                                         <button id="btn-submit" class="btn btn-primary" ownId="-1" ownDepth="1">submit</button>
-                                        <button id="btn-cancel" class="btn btn-default modal-dismiss">닫 기</button>
+                                        <button id="btn-cancel" class="btn btn-default modal-dismiss">close</button>
                                     </div>
                                 </div>
                             </footer>
@@ -140,7 +140,7 @@
             <img class="avatar" style="max-height: 150px; width:auto; border: 1px solid #ddd; border-radius: 5px;" src="{{url($photo)}}">
         </div>
         <div class="center">
-            <button id="btn-favourite" type="button" class="btn btn-success m-xs" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="즐겨찾기"><i class="fa fa-heart"></i></button>
+            <button id="btn-favourite" type="button" class="btn btn-success m-xs" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="favorite"><i class="fa fa-heart"></i></button>
         </div>
     </div>
 </div>
